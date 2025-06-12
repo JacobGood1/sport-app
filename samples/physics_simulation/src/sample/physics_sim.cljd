@@ -1,0 +1,50 @@
+(ns sample.physics-sim
+  "Port of https://docs.flutter.dev/cookbook/animation/physics-simulation#interactive-example"
+  (:require
+   ["package:flutter/material.dart" :as m]
+   ["package:flutter/physics.dart" :as p]
+   [cljd.flutter :as f]))
+
+(defn draggable-card [& {:keys [child]}]
+  (f/widget
+   :get [m/MediaQuery]
+   :vsync vsync
+   :managed [animator (m/AnimationController .vsync vsync)]
+   :let [state (atom {:alignment m/Alignment.center})]
+   :watch [{:keys [alignment animation]} state]
+   :bg-watcher ([animated-alignment animation]
+                (swap! state assoc :alignment animated-alignment))
+   :let [{:flds [width height]} (.-size media-query)
+         run-animation
+         (fn [^m/Offset {:flds [dx dy]}]
+           (let [unit-velocity (.-distance (m/Offset (/ dx width) (/ dy height)))
+                 spring (p/SpringDescription .mass 30 .stiffness 1 .damping 1)
+                 simulation (p/SpringSimulation spring 0 1 (- unit-velocity))]
+             (swap! state assoc :animation
+               (.drive animator
+                 (m/AlignmentTween .begin alignment .end m/Alignment.center)))
+             (.animateWith animator simulation)))]
+   (m/GestureDetector
+     .onPanDown (fn [_]
+                  (.stop animator)
+                  (when animation
+                    (swap! state dissoc :animation))
+                  nil)
+     .onPanUpdate (fn [^m/DragUpdateDetails {{:flds [dx dy]} .-localPosition}]
+                    (swap! state assoc :alignment
+                      (m/Alignment (- (* 2 (/ dx width)) 1) (- (* 2 (/ dy height)) 1)))
+                    nil)
+     .onPanEnd (fn [^m/DragEndDetails details]
+                 (run-animation (-> details .-velocity .-pixelsPerSecond))
+                 nil))
+   (m/Align .alignment alignment)
+   m/Card
+   child))
+
+(def physics-card-demo
+  (m/Scaffold
+    .appBar (m/AppBar)
+    .body (draggable-card :child (m/FlutterLogo .size 128))))
+
+(defn main []
+  (m/runApp (m/MaterialApp .home physics-card-demo)))

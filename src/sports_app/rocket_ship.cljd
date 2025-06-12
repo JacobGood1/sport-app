@@ -1,0 +1,26 @@
+(ns sports-app.rocket-ship
+  (:require ["package:flutter/material.dart" :as m]
+            ["package:rive/rive.dart" :as rive]
+            [cljd.flutter :as f]))
+
+(defn rocket-animation []
+  (f/widget
+    :let [file (rive/RiveFile.asset "assets/animations/rocket_ship.riv")
+          artboard-instance (.-mainArtboard (await file))
+          controller-instance (rive/SimpleAnimation. "idle")]
+    :watch [artboard nil
+            controller nil]
+
+
+      ;(.addController artboard-instance controller-instance)
+      ;(reset! artboard artboard-instance)
+      ;(reset! controller controller-instance)
+      (if artboard
+        (m/Container
+          .child (rive/Rive
+                   .artboard artboard
+                   .fit m.BoxFit/contain)
+          .width 300.0
+          .height 300.0)
+        (m/CircularProgressIndicator))))
+
