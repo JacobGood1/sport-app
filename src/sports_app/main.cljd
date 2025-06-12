@@ -17,7 +17,8 @@
     (m/Column
       .mainAxisAlignment m.MainAxisAlignment/center
       .children
-      [(rs/rocket-animation)
+      [
+       ;(rs/rocket-animation)
        (m/Text "kanban can when?!"
               .style (m/TextStyle
                        .color m.Colors/red

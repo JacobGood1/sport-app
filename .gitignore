@@ -58,3 +58,9 @@ test/cljd-out/
 .metadata
 
 pubspec.lock
+
+# ClojureDart
+.cpcache/
+.clojuredart/
+lib/cljd-out/
+test/cljd-out/
