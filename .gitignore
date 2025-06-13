@@ -67,3 +67,6 @@ test/cljd-out/
 
 # Nixos FHS
 /result
+
+.nrepl-port
+

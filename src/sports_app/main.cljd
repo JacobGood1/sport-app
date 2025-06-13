@@ -1,29 +1,37 @@
 (ns sports-app.main
   (:require ["package:flutter/material.dart" :as m]
             [cljd.flutter :as f]
-            [sports-app.rocket-ship :as rs]))
+            [sports-app.rocket-ship :as rs]
+            ["package:rive/rive.dart" :as rive]))
+
 
 (defn main []
-  (f/run
-    (m/MaterialApp
-      .title "Welcome to Flutter"
-      .theme (m/ThemeData .primarySwatch m.Colors/pink))
-    .home
-    (m/Scaffold
-      .appBar (m/AppBar
-                .title (m/Text "Welcome to ClojureDart")))
-    .body
-    m/Center
-    (m/Column
-      .mainAxisAlignment m.MainAxisAlignment/center
-      .children
-      [
-       ;(rs/rocket-animation)
-       (m/Text "kanban can when?!"
-              .style (m/TextStyle
-                       .color m.Colors/red
-                       .fontSize 32.0))
-       (m/SizedBox .height 20.0)
-       (m/ElevatedButton
-         .onPressed (fn [] (println "this is kewl!"))
-         .child (m/Text "Click Me!"))])))
+  ;; trigger 1
+  (let [controller (rive/SimpleAnimation "idle")]
+    (f/run
+      (m/MaterialApp
+        .title "Welcome to Flutter"
+        .theme (m/ThemeData .primarySwatch m.Colors/pink))
+      .home
+      (m/Scaffold
+        .appBar (m/AppBar
+                  .title (m/Text "Welcome to ClojureDart")))
+      .body
+      m/Center
+      (m/Column
+        .mainAxisAlignment m.MainAxisAlignment/center
+        .children
+        [(rs/rocket-ship controller)
+         (m/Text "kanban can when?!"
+                .style (m/TextStyle
+                         .color m.Colors/red
+                         .fontSize 32.0))
+         (m/SizedBox .height 20.0)
+         (f/widget
+           :let [button-state (atom (m/Icon (m/Icons.flight_takeoff)))]
+           :watch [icon-symbol button-state]
+           (m/ElevatedButton.icon
+             .onPressed (rs/handle-rocket-ship controller button-state)
+             ; Icon(isPlaying ? Icons.flight_land : Icons.flight_takeoff )
+             .icon icon-symbol
+             .label (m/Text "Click Me!")))]))))
