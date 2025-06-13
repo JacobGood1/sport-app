@@ -64,3 +64,5 @@ pubspec.lock
 .clojuredart/
 lib/cljd-out/
 test/cljd-out/
+
+.nrepl-port

@@ -1,7 +1,8 @@
 (ns sports-app.rocket-ship
   (:require ["package:flutter/material.dart" :as m]
             ["package:rive/rive.dart" :as rive]
-            [cljd.flutter :as f]))
+            [cljd.flutter :as f]
+            ["dart-widgets/rocket-ship.dart" :as rs]))
 
 ;; example of state machine implementation in dart
 ;; https://rive.app/docs/runtimes/state-machines#flutter
@@ -13,6 +14,10 @@
 ;; https://github.com/Tensegritics/ClojureDart/blob/main/doc/ClojureDart%20Cheatsheet.pdf
 
 
-;; TODO fill on the code that will make the magic happen
-(defn rocket-animation [])
+;; TODO fill in the code that will make the magic happen
+(defn rocket-ship
+  []
+  (rs/RocketShip))
+
+
 

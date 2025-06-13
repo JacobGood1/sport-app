@@ -3,6 +3,7 @@
             [cljd.flutter :as f]
             [sports-app.rocket-ship :as rs]))
 
+
 (defn main []
   (f/run
     (m/MaterialApp
@@ -17,8 +18,7 @@
     (m/Column
       .mainAxisAlignment m.MainAxisAlignment/center
       .children
-      [
-       (rs/rocket-animation)
+      [(rs/rocket-ship)
        (m/Text "kanban can when?!"
               .style (m/TextStyle
                        .color m.Colors/red
