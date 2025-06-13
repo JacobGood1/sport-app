@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
 class RocketShip extends StatefulWidget {
-  const RocketShip({Key? key}) : super(key: key);
+  final bool initiallyPlaying;
+  final GlobalKey<_RocketShipState> _stateKey = GlobalKey<_RocketShipState>();
+  late RiveAnimationController _controller;
+  RocketShip({Key? key, this.initiallyPlaying = false}) : super();
+
+  /// Tracks if the animation is playing by whether controller is active
+  bool get isPlaying => _stateKey.currentState?.isPlaying ?? false;
 
   @override
   _RocketShipState createState() => _RocketShipState();
@@ -23,6 +29,7 @@ class _RocketShipState extends State<RocketShip> {
   void initState() {
     super.initState();
     _controller = SimpleAnimation('idle');
+    _controller.isActive = widget.initiallyPlaying;
   }
 
   @override
@@ -93,5 +100,19 @@ class _RocketShipState extends State<RocketShip> {
 
 
 void main() {
-  runApp(RocketShip());
+  // Example of using the RocketShip widget with initiallyPlaying set to true
+  final rocketShip = RocketShip(initiallyPlaying: true);
+
+  // Example of how to access the isPlaying property from outside
+  // This would typically be used after the widget is built and the state is initialized
+  Future.delayed(Duration(seconds: 1), () {
+    print('Is rocket playing? ${rocketShip.isPlaying}');
+  });
+
+  runApp(MaterialApp(
+    home: Scaffold(
+      appBar: AppBar(title: Text('Rocket Animation')),
+      body: Center(child: rocketShip),
+    ),
+  ));
 }
