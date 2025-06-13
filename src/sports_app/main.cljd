@@ -6,6 +6,7 @@
 
 
 (defn main []
+  ;; trigger 1
   (let [controller (rive/SimpleAnimation "idle")]
     (f/run
       (m/MaterialApp
@@ -38,9 +39,10 @@
            (m/ElevatedButton.icon
              .onPressed (fn []
                           (if (.-isActive controller)
-                            (reset! button-state (m/Icon (m/Icons.flight_land)))
-                            (reset! button-state (m/Icon (m/Icons.flight_takeoff))))
-                          (.-isActive! controller (not (.-isActive controller))) nil)
+                            (reset! button-state (m/Icon (m/Icons.flight_takeoff)))
+                            (reset! button-state (m/Icon (m/Icons.flight_land))))
+                          (.-isActive! controller (not (.-isActive controller)))
+                          nil)
              ; Icon(isPlaying ? Icons.flight_land : Icons.flight_takeoff )
              .icon icon-symbol
              .label (m/Text "Click Me!")))]))))
