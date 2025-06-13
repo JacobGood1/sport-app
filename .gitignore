@@ -64,3 +64,6 @@ pubspec.lock
 .clojuredart/
 lib/cljd-out/
 test/cljd-out/
+
+# Nixos FHS
+/result
