@@ -21,13 +21,7 @@
       (m/Column
         .mainAxisAlignment m.MainAxisAlignment/center
         .children
-        [(m/Container
-           .width 300
-           .height 300
-           .child
-           (rive/RiveAnimation.network "assets/animations/rocket_ship.riv"
-                                       .controllers [controller]
-                                       .fit (m/BoxFit.contain)))
+        [(rs/rocket-ship controller)
          (m/Text "kanban can when?!"
                 .style (m/TextStyle
                          .color m.Colors/red
@@ -37,12 +31,7 @@
            :let [button-state (atom (m/Icon (m/Icons.flight_takeoff)))]
            :watch [icon-symbol button-state]
            (m/ElevatedButton.icon
-             .onPressed (fn []
-                          (if (.-isActive controller)
-                            (reset! button-state (m/Icon (m/Icons.flight_takeoff)))
-                            (reset! button-state (m/Icon (m/Icons.flight_land))))
-                          (.-isActive! controller (not (.-isActive controller)))
-                          nil)
+             .onPressed (rs/handle-rocket-ship controller button-state)
              ; Icon(isPlaying ? Icons.flight_land : Icons.flight_takeoff )
              .icon icon-symbol
              .label (m/Text "Click Me!")))]))))

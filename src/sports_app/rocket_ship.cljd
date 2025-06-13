@@ -16,8 +16,23 @@
 
 ;; TODO fill in the code that will make the magic happen
 (defn rocket-ship
-  [])
-  ;(rs/RocketShip .initiallyPlaying false))
+  [controller]
+  (m/Container
+    .width 300
+    .height 300
+    .child
+    (rive/RiveAnimation.network "assets/animations/rocket_ship.riv"
+                                .controllers [controller]
+                                .fit (m/BoxFit.contain))))
+
+(defn handle-rocket-ship
+  [^rive/RiveAnimationController controller button-state]
+  (fn []
+    (if (.-isActive controller)
+      (reset! button-state (m/Icon (m/Icons.flight_takeoff)))
+      (reset! button-state (m/Icon (m/Icons.flight_land))))
+    (.-isActive! controller (not (.-isActive controller)))
+    nil))
 
 
 
