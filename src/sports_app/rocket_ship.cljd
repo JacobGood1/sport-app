@@ -13,26 +13,29 @@
 ;; finally cheat sheet is here:
 ;; https://github.com/Tensegritics/ClojureDart/blob/main/doc/ClojureDart%20Cheatsheet.pdf
 
+(defn handle-trigger [controller]
+  (.fire (first (.-inputs @controller)))
+  nil)
 
-;; TODO fill in the code that will make the magic happen
-(defn rocket-ship
-  [controller]
-  (m/Container
-    .width 300
-    .height 300
-    .child
-    (rive/RiveAnimation.network "assets/animations/rocket_ship.riv"
-                                .controllers [controller]
-                                .fit (m/BoxFit.contain))))
-
-(defn handle-rocket-ship
-  [^rive/RiveAnimationController controller button-state]
-  (fn []
-    (if (.-isActive controller)
-      (reset! button-state (m/Icon (m/Icons.flight_takeoff)))
-      (reset! button-state (m/Icon (m/Icons.flight_land))))
-    (.-isActive! controller (not (.-isActive controller)))
-    nil))
-
-
-
+(defn load-rocket-ship
+  []
+  (let [state-machine-atom (atom nil)
+        artboard-atom (atom nil)]
+    ;; return a vector
+    [(rive/RiveAnimation.network
+   "assets/animations/rocket_ship.riv"
+   .artboard "Artboard"
+   .stateMachines ["State Machine 1"]
+   .controllers []
+   .onInit (fn [artboard]
+               ;; Create StateMachineController with Artboard object
+               (let [controller (rive/StateMachineController.fromArtboard
+                                  artboard
+                                  "State Machine 1")]
+                 (reset! state-machine-atom controller)
+                 (reset! artboard-atom artboard)
+                 (when controller
+                   (.addController artboard controller)))
+             nil))
+     state-machine-atom
+     artboard-atom]))

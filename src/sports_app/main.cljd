@@ -6,8 +6,10 @@
 
 
 (defn main []
-  ;; trigger 1
-  (let [controller (rive/SimpleAnimation "idle")]
+  (let [rocket-asset (rs/load-rocket-ship)
+        rocket (nth rocket-asset 0)
+        state-machine (nth rocket-asset 1)
+        artboard (nth rocket-asset 2)]
     (f/run
       (m/MaterialApp
         .title "Welcome to Flutter"
@@ -23,7 +25,11 @@
       (m/Column
         .mainAxisAlignment m.MainAxisAlignment/center
         .children
-        [(rs/rocket-ship controller)
+        [(m/Container
+           .width 300
+           .height 300
+           .child
+           rocket)
          (m/Text "kanban can when?!"
                 .style (m/TextStyle
                          .color m.Colors/red
@@ -33,7 +39,11 @@
            :let [button-state (atom (m/Icon (m/Icons.flight_takeoff)))]
            :watch [icon-symbol button-state]
            (m/ElevatedButton.icon
-             .onPressed (rs/handle-rocket-ship controller button-state)
-             ; Icon(isPlaying ? Icons.flight_land : Icons.flight_takeoff )
+            .onPressed (fn []
+                         (rs/handle-trigger state-machine)
+                         (comment (if (.-isActive animation-idle)
+                           (reset! button-state (m/Icon (m/Icons.flight_takeoff)))
+                           (reset! button-state (m/Icon (m/Icons.flight_land))))))
+             
              .icon icon-symbol
              .label (m/Text "Click Me!")))]))))
