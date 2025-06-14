@@ -70,3 +70,6 @@ test/cljd-out/
 
 .nrepl-port
 
+# Emacs
+\#*\#
+*.\#
