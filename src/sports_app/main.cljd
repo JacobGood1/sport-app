@@ -13,13 +13,12 @@
     (f/run
       (m/MaterialApp
         .title "Welcome to Flutter"
-        .theme (m/ThemeData .primarySwatch m.Colors/pink))
+        .theme (m/ThemeData.dark))
       .home
-      (m/Scaffold
-        .backgroundColor (m/Color 0xFF2C2F33)
+      (m/Scaffold)
+        ;.backgroundColor (m/Color 0xFF2C2F33))
         ;; .appBar (m/AppBar
         ;;         .title (m/Text "Welcome to ClojureDart"))
-        )
       .body
       m/Center
       (m/Column
