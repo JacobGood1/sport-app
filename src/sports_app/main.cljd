@@ -2,37 +2,92 @@
   (:require ["package:flutter/material.dart" :as m]
             [cljd.flutter :as f]
             [sports-app.rocket-ship :as rs]
-            ["package:rive/rive.dart" :as rive]))
+            ["package:rive/rive.dart" :as rive]
+            ["package:flutter_login/flutter_login.dart" :as login]))
 
+(def users {"mental-cancer@hijacks.com" "hijacks-your-brain"})
+(def login-time (Duration .milliseconds 2250))
+
+(defn ^#/(Future String?) -auth-user [^login/LoginData login-data]
+  (println "Name:" (.-name login-data) "Password:" (.-password login-data))
+  (-> (Future/delayed login-time)
+      (.then (fn [_]
+               (cond (not (.containsKey users (.-name login-data))) "User does not exist"
+                     (not= (users (.-name login-data)) (.-password login-data)) "Password does not match"
+                     :else nil)))))
+
+(defn ^#/(Future String?) -signup-user [^login/SignupData signup-data]
+  (println "Signup Name:" (.-name signup-data) "Password:" (.-password signup-data))
+  (-> (Future/delayed login-time)
+      (.then (fn [_] nil))))
+
+(defn ^#/(Future String?) -recover-password [^String name]
+  (println "Recovering for Name:" name)
+  (-> (Future/delayed login-time)
+      (.then (fn [_]
+               (if (not (.containsKey users name))
+                 "User does not exist")))))
+
+(def second-route
+  (m/Scaffold
+    .appBar (m/AppBar .title (m/Text "Second Route"))
+    .body
+    (f/widget
+      :get [m/Navigator]
+      :context ctx
+      m/Center
+      (m/ElevatedButton .onPressed #(do (println "Going back")
+                                        (println (.canPop navigator))
+                                        (.pop navigator)))
+      (m/Text "Go back!"))))
+
+(def login-route
+  (f/widget
+    :get [m/Navigator]
+    :context ctx
+    (m/Scaffold)
+    .body
+    m/Center
+    (m/Column
+      .mainAxisAlignment m.MainAxisAlignment/center
+      .children
+      ;[(rs/rocket-ship controller)
+      ; (m/Text "kanban can when?!"
+      ;         .style (m/TextStyle
+      ;                  .color m.Colors/red
+      ;                  .fontSize 32.0))
+      ; (m/SizedBox .height 20.0)
+      ; (f/widget
+      ;   :let [button-state (atom (m/Icon (m/Icons.flight_takeoff)))]
+      ;   :watch [icon-symbol button-state]
+      ;   (m/ElevatedButton.icon
+      ;     .onPressed (rs/handle-rocket-ship controller button-state)
+      ;     ; Icon(isPlaying ? Icons.flight_land : Icons.flight_takeoff )
+      ;     .icon icon-symbol
+      ;     .label (m/Text "Click Me!")))]
+      [(m/Expanded
+         .child (login/FlutterLogin
+                  .title "Sports App"
+                  .onLogin -auth-user
+                  .onSignup -signup-user
+                  .onSubmitAnimationCompleted (fn []
+                                                (.push navigator (#/(m/MaterialPageRoute Object) .builder (f/build second-route)))
+                                                ;(.pushNamed navigator "/")
+                                                nil)
+                  .onRecoverPassword -recover-password))])))
 
 (defn main []
   ;; trigger 1
   (let [controller (rive/SimpleAnimation "idle")]
+    (prn users)
     (f/run
       (m/MaterialApp
         .title "Welcome to Flutter"
-        .theme (m/ThemeData.dark))
-      .home
-      (m/Scaffold)
-        ;.backgroundColor (m/Color 0xFF2C2F33))
-        ;; .appBar (m/AppBar
-        ;;         .title (m/Text "Welcome to ClojureDart"))
-      .body
-      m/Center
-      (m/Column
-        .mainAxisAlignment m.MainAxisAlignment/center
-        .children
-        [(rs/rocket-ship controller)
-         (m/Text "kanban can when?!"
-                .style (m/TextStyle
-                         .color m.Colors/red
-                         .fontSize 32.0))
-         (m/SizedBox .height 20.0)
-         (f/widget
-           :let [button-state (atom (m/Icon (m/Icons.flight_takeoff)))]
-           :watch [icon-symbol button-state]
-           (m/ElevatedButton.icon
-             .onPressed (rs/handle-rocket-ship controller button-state)
-             ; Icon(isPlaying ? Icons.flight_land : Icons.flight_takeoff )
-             .icon icon-symbol
-             .label (m/Text "Click Me!")))]))))
+        .theme (m/ThemeData.light)
+        
+        ;.routes {"/" (f/build second-route)
+        ;         "/signup" (f/build login-route)}
+        ;.initialRoute "/signup"))))
+
+        .home login-route))))
+    
