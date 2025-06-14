@@ -14,8 +14,10 @@
         .theme (m/ThemeData .primarySwatch m.Colors/pink))
       .home
       (m/Scaffold
-        .appBar (m/AppBar
-                  .title (m/Text "Welcome to ClojureDart")))
+        .backgroundColor (m/Color 0xFF2C2F33)
+        ;; .appBar (m/AppBar
+        ;;         .title (m/Text "Welcome to ClojureDart"))
+        )
       .body
       m/Center
       (m/Column
