@@ -6,10 +6,7 @@
 
 
 (defn main []
-  (let [rocket-asset (rs/load-rocket-ship)
-        rocket (nth rocket-asset 0)
-        state-machine (nth rocket-asset 1)
-        artboard (nth rocket-asset 2)]
+  (let [rocket-asset (rs/load-asset "assets/animations/rocket_ship.riv" "State Machine 1")]
     (f/run
       (m/MaterialApp
         .title "Welcome to Flutter"
@@ -28,7 +25,7 @@
            .width 300
            .height 300
            .child
-           rocket)
+           (:widget rocket-asset))
          (m/Text "kanban can when?!"
                 .style (m/TextStyle
                          .color m.Colors/red
@@ -39,7 +36,7 @@
            :watch [icon-symbol button-state]
            (m/ElevatedButton.icon
             .onPressed (fn []
-                         (rs/handle-trigger state-machine)
+                         (.fire (rs/trigger (:controller rocket-asset) "Trigger 1"))
                          (comment (if (.-isActive animation-idle)
                            (reset! button-state (m/Icon (m/Icons.flight_takeoff)))
                            (reset! button-state (m/Icon (m/Icons.flight_land))))))

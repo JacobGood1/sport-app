@@ -13,29 +13,53 @@
 ;; finally cheat sheet is here:
 ;; https://github.com/Tensegritics/ClojureDart/blob/main/doc/ClojureDart%20Cheatsheet.pdf
 
-(defn handle-trigger [controller]
-  (.fire (first (.-inputs @controller)))
-  nil)
+;; (defn load-rocket-ship
+;;   []
+;;   (let [state-machine-atom (atom nil)
+;;         artboard-atom (atom nil)]
+;;     ;; return a vector
+;;     [(rive/RiveAnimation.network
+;;    "assets/animations/rocket_ship.riv"
+;;    .artboard "Artboard"
+;;    .stateMachines ["State Machine 1"]
+;;    .controllers []
+;;    .onInit (fn [artboard]
+;;                ;; Create StateMachineController with Artboard object
+;;                (let [controller (rive/StateMachineController.fromArtboard
+;;                                   artboard
+;;                                   "State Machine 1")]
+;;                  (reset! state-machine-atom controller)
+;;                  (reset! artboard-atom artboard)
+;;                  (when controller
+;;                    (.addController artboard controller)))
+;;              nil))
+;;      state-machine-atom
+;;      artboard-atom]))
 
-(defn load-rocket-ship
-  []
-  (let [state-machine-atom (atom nil)
-        artboard-atom (atom nil)]
-    ;; return a vector
-    [(rive/RiveAnimation.network
-   "assets/animations/rocket_ship.riv"
-   .artboard "Artboard"
-   .stateMachines ["State Machine 1"]
-   .controllers []
-   .onInit (fn [artboard]
-               ;; Create StateMachineController with Artboard object
-               (let [controller (rive/StateMachineController.fromArtboard
-                                  artboard
-                                  "State Machine 1")]
-                 (reset! state-machine-atom controller)
-                 (reset! artboard-atom artboard)
-                 (when controller
-                   (.addController artboard controller)))
-             nil))
-     state-machine-atom
-     artboard-atom]))
+(defn trigger
+  [controller ^String trigger]
+  (first (filter (fn [smi] (= (.-name smi) trigger)) (.-inputs @controller))))
+
+(defn make-controller
+  [artboard ^String state-machine]
+  "Create StateMachineController with Artboard object."
+  (let [controller (rive/StateMachineController.fromArtboard
+                      artboard
+                      state-machine)]
+    (when controller
+      (.addController artboard controller))
+    controller))
+
+(defn load-asset
+  [filepath ^String main-state-machine]
+  (let [state-machine-controller-atom (atom nil)]
+    {:widget (rive/RiveAnimation.network
+                filepath
+                .onInit (fn [artboard]
+                            (reset! state-machine-controller-atom (make-controller artboard main-state-machine))
+                            nil))
+    :controller state-machine-controller-atom}))
+
+;; state machine controller might be the only type of controller
+;; state machine controller only has .fromArtboard, no other .from
+;; do we need to dispose anything with .dispose ???
