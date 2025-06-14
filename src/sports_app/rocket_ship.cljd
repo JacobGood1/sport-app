@@ -40,6 +40,10 @@
   [controller ^String trigger]
   (first (filter (fn [smi] (= (.-name smi) trigger)) (.-inputs @controller))))
 
+(defn input
+  [controller ^String input]
+  (first (filter (fn [smi] (= (.-name smi) input)) (.-inputs @controller))))
+
 (defn make-controller
   [artboard ^String state-machine]
   "Create StateMachineController with Artboard object."
