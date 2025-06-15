@@ -7,41 +7,82 @@
 
 
 (defn main []
-  ;; trigger 1
-  (let [controller (rive/SimpleAnimation "idle")
-        rive-widget (rutils/->RiveWidget)]
+  (let [rocket-asset (rs/load-asset "assets/animations/rocket_ship.riv" "State Machine 1")
+        progress-bar-asset (rs/load-asset "assets/animations/progress_bar.riv" "State Machine 1")]
     (f/run
       (m/MaterialApp
         .title "Welcome to Flutter"
-        .theme (m/ThemeData .primarySwatch m.Colors/pink))
+        .theme (m/ThemeData.dark))
       .home
-      (m/Scaffold
-        .appBar (m/AppBar
-                  .title (m/Text "Welcome to ClojureDart")))
+      (m/Scaffold)
+        ;.backgroundColor (m/Color 0xFF2C2F33))
+        ;; .appBar (m/AppBar
+        ;;         .title (m/Text "Welcome to ClojureDart"))
       .body
       m/Center
       (m/Column
         .mainAxisAlignment m.MainAxisAlignment/center
         .children
-        [
-         (do
-           (println (rs/rocket-ship))
-           (println (rutils/->RiveWidget))
-           (m/Text "kanban can when?!"
-                  .style (m/TextStyle
-                           .color m.Colors/red
-                           .fontSize 32.0)))
+        [(m/Container
+           .width 300
+           .height 300
+           .child
+           (:widget rocket-asset))
+         (m/Container
+           .width 300
+           .height 300
+           .child
+           (:widget progress-bar-asset))
+         
+         (m/Text "kanban can when?!"
+                .style (m/TextStyle
+                         .color m.Colors/red
+                         .fontSize 32.0))
          (m/SizedBox .height 20.0)
          (f/widget
+          :let [slider (atom 0)]
+          :watch [value slider]
+          (m/Slider
+              .value value
+              .min 0
+              .max 100
+              .onChanged (fn [a]
+                           (reset! slider a)
+                           (.-value! (.getNumberInput @(:controller progress-bar-asset) "load percent") a) 
+                           nil)))
+         (f/widget
            :let [button-state (atom (m/Icon (m/Icons.flight_takeoff)))]
-           :watch [icon-symbol button-state
-                   rocket-ship-atr (rs/rocket-ship)]
-
+           :watch [icon-symbol button-state]
+           
            (m/ElevatedButton.icon
-             .onPressed (fn [] (println (rutils/artboard rive-widget)))
-
-                          ;(do (println (:state-machine-controller rocket-ship-atr))
-                          ;    (rs/handle-rocket-ship controller button-state)))
-             ; Icon(isPlaying ? Icons.flight_land : Icons.flight_takeoff )
+            .onPressed (fn []
+                         
+                         
+                         (.fire (rs/trigger (:controller rocket-asset) "Trigger 1"))
+                         (comment (if (.-isActive animation-idle)
+                           (reset! button-state (m/Icon (m/Icons.flight_takeoff)))
+                           (reset! button-state (m/Icon (m/Icons.flight_land))))))
+             
              .icon icon-symbol
              .label (m/Text "dsadsa")))]))))
+
+(comment (m/Slider
+              .value 0
+              .min 0
+              .max 100
+              .onChanged (fn [a] 
+                           nil)
+              ))
+
+;; Slider(
+;;               value: _currentValue,
+;;               min: 0,
+;;               max: 100,
+;;               divisions: 100, // Optional: for discrete steps
+;;               label: _currentValue.round().toString(), // Optional: shows value on thumb
+;;               onChanged: (double value) {
+;;                 setState(() {
+;;                   _currentValue = value; // Update the value when sliding
+;;                 });
+;;               },
+;;             )

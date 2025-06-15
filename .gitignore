@@ -65,6 +65,9 @@ pubspec.lock
 lib/cljd-out/
 test/cljd-out/
 
+# Nixos FHS
+/result
+
 .nrepl-port
 
 # ClojureDart
@@ -72,3 +75,7 @@ test/cljd-out/
 .clojuredart/
 lib/cljd-out/
 test/cljd-out/
+
+# Emacs
+\#*\#
+*.\#
