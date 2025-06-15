@@ -25,6 +25,14 @@ class _RocketShipState extends State<RocketShip> {
   /// Tracks if the animation is playing by whether controller is running
   bool get isPlaying => _controller.isActive;
 
+  lawl(Artboard art){
+
+    var kek = StateMachineController.fromArtboard(
+    art,
+    "State Machine 1");
+    kek?.getTriggerInput('dsad')
+  }
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +42,12 @@ class _RocketShipState extends State<RocketShip> {
 
   @override
   Widget build(BuildContext context) {
+    var kek = RiveAnimation.network(
+      'assets/animations/rocket_ship.riv',
+      controllers: [_controller],
+      fit: BoxFit.contain,
+    );
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,

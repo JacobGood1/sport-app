@@ -2,6 +2,7 @@
   (:require ["package:flutter/material.dart" :as m]
             ["package:rive/rive.dart" :as rive]
             [cljd.flutter :as f]))
+
             ;["dart-widgets/rocket-ship.dart" :as rs]))
 
 ;; example of state machine implementation in dart
@@ -16,14 +17,37 @@
 
 ;; TODO fill in the code that will make the magic happen
 (defn rocket-ship
-  [controller]
-  (m/Container
-    .width 300
-    .height 300
-    .child
-    (rive/RiveAnimation.network "assets/animations/rocket_ship.riv"
-                                .controllers [controller]
-                                .fit (m/BoxFit.contain))))
+  []
+  (let [anim (rive/SimpleAnimation "idle")
+        rocket-ship-atr
+        (atom {:artboard nil
+               :state-machine-controller nil
+               :animation anim
+               :widget nil})
+        container
+        (m/Container
+          .width 300
+          .height 300
+          .child (rive/RiveAnimation.network "assets/animations/rocket_ship.riv"
+                                             .controllers [anim]
+                                             .onInit (fn [-artboard]
+                                                       (swap! rocket-ship-atr
+                                                              assoc
+                                                              :artboard -artboard
+                                                              :state-machine-controller (rive/StateMachineController.fromArtboard
+                                                                                          -artboard
+                                                                                          "State Machine 1")))
+
+                                             .fit (m/BoxFit.contain)))]
+    (swap! rocket-ship-atr
+           assoc
+           :widget
+           container)
+
+    rocket-ship-atr))
+
+
+
 
 (defn handle-rocket-ship
   [^rive/RiveAnimationController controller button-state]
