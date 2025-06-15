@@ -30,7 +30,7 @@ class _RocketShipState extends State<RocketShip> {
     var kek = StateMachineController.fromArtboard(
     art,
     "State Machine 1");
-    kek?.getTriggerInput('dsad')
+    kek?.getTriggerInput('dsad');
   }
 
   @override

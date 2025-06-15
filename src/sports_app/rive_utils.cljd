@@ -22,8 +22,8 @@
 
 (deftype RiveWidget []
   :extends m/StatefulWidget
-  (createState [this] (InnerRiveWidget))
-  ^:mixin wd/RiveWidgetData)
+  (createState [this] (InnerRiveWidget)))
+  ;^:mixin wd/RiveWidgetData)
 
 (defn artboard [rive-widget]
   (.-artboard rive-widget))
