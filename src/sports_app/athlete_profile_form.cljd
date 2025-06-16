@@ -1,0 +1,223 @@
+(ns sports-app.athlete-profile-form
+  (:require ["package:flutter/material.dart" :as m]
+            [cljd.flutter :as f]
+            [cljd.string :as str]
+            [sports-app.theme :as t]))
+
+(defn athlete-profile-form
+  [ctx]
+  (f/widget
+   :context ctx
+   :let [form-key (#/(m/GlobalKey m/FormState))
+         sports ["Basketball" "Football" "Soccer" "Baseball" "Tennis" "Swimming" "Track & Field" "Volleyball" "Golf" "Other"]
+         graduation-years (into [] (map str (range 2024 2031)))
+         career-interests #{"Business" "Technology" "Healthcare" "Education" "Engineering" "Marketing" "Finance" "Sports Management" "Other"}
+         selected-sport (atom (last sports))
+         selected-year (atom (first graduation-years))
+         selected-interests (atom #{})]
+   :watch [s-sport selected-sport
+           s-year selected-year
+           s-interests selected-interests]
+   :managed [name-controller (m/TextEditingController)
+             school-controller (m/TextEditingController)
+             major-controller (m/TextEditingController)
+             linkedin-controller (m/TextEditingController)]
+   (m/Scaffold
+    .appBar (m/AppBar
+             .title (m/Text "Student-Athlete Profile")
+             .backgroundColor t/blue)
+    .body
+    (m/SingleChildScrollView
+     .child
+     (m/Padding
+      .padding (m/EdgeInsets.all 20.0)
+      .child
+      (m/Form
+       .key form-key
+       .child
+       (m/Column
+        .crossAxisAlignment m.CrossAxisAlignment/start
+        .children
+        [(m/Text "Create Your Profile"
+                .style (m/TextStyle
+                        .fontSize 24.0
+                        .fontWeight m.FontWeight/bold
+                        .color t/dark-grey))
+         (m/SizedBox .height 20.0)
+
+
+         ;; Full Name
+         (m/TextFormField
+           .controller name-controller
+           .decoration (m/InputDecoration
+                          .labelText "Full Name"
+                          .hintText "Enter your full name"
+                          .border (m/OutlineInputBorder))
+           .validator (fn [value] (when (str/blank? value) "Please enter your name")))
+         (m/SizedBox .height 15.0)
+
+           ;; School
+         (m/TextFormField
+           .controller school-controller
+           .decoration (m/InputDecoration
+                          .labelText "School"
+                          .hintText "Enter your school name"
+                          .border (m/OutlineInputBorder))
+           .validator (fn [value] (when (str/blank? value) "Please enter your school")))
+         (m/SizedBox .height 15.0)
+
+           ;; Sport (Dropdown)
+         (m/DropdownButtonFormField
+           .value s-sport
+           .decoration (m/InputDecoration
+                          .labelText "Sport"
+                          .border (m/OutlineInputBorder))
+           .items (for [sport sports]
+                    (m/DropdownMenuItem
+                       .value sport
+                       .child (m/Text sport)))
+           .onChanged (fn [value] (reset! selected-sport value)))
+         (m/SizedBox .height 15.0)
+
+           ;; Graduation Year (Dropdown)
+         (m/DropdownButtonFormField
+           .value s-year
+           .decoration (m/InputDecoration
+                          .labelText "Graduation Year"
+                          .border (m/OutlineInputBorder))
+           .items (for [year graduation-years]
+                    (m/DropdownMenuItem
+                       .value year
+                       .child (m/Text year)))
+           .onChanged (fn [value] (reset! selected-year value)))
+
+         (m/SizedBox .height 15.0)
+
+           ;; Major
+         (m/TextFormField
+           .controller major-controller
+           .decoration (m/InputDecoration
+                          .labelText "Major"
+                          .hintText "Enter your major"
+                          .border (m/OutlineInputBorder))
+           .validator (fn [value] (when (str/blank? value) "Please enter your major")))
+
+         (m/SizedBox .height 15.0)
+
+           ;; Career Interests (Multi-select)
+         (m/Text "Career Interests"
+                .style (m/TextStyle
+                         .fontSize 16.0
+                         .fontWeight m.FontWeight/bold))
+         (m/SizedBox .height 5.0)
+         (m/Wrap
+           .spacing 8.0
+           .children
+           (for [interest career-interests]
+                (m/FilterChip
+                   .label (m/Text interest)
+                   .selected (if (some #{interest} s-interests) true false)
+                   .backgroundColor t/white
+                   .selectedColor t/blue
+                   .checkmarkColor t/green
+                   .onSelected (fn [selected?]
+                                 (swap! selected-interests
+                                        (if selected? conj disj)
+                                        interest)))))
+         (m/SizedBox .height 15.0)
+
+           ;; Resume Upload
+         (m/OutlinedButton.icon
+           .icon (m/Icon (m/Icons.upload_file))
+           .label (m/Text "Upload Resume")
+           .style (m/OutlinedButton.styleFrom
+                     .foregroundColor t/blue)
+           .onPressed (fn []
+                        (m/showDialog
+                           .context ctx
+                           .builder
+                           (f/build
+                             (m/AlertDialog
+                                .title (m/Text "Feature Coming Soon")
+                                .content (m/Text "Resume upload will be available in a future update.")
+                                .actions
+                                [(m/TextButton
+                                   .onPressed (fn [] (.pop m/Navigator ctx) nil)
+                                   .child (m/Text "OK"))])))
+                        nil))
+         (m/SizedBox .height 15.0)
+
+           ;; LinkedIn (Optional)
+         (m/TextFormField
+           .controller linkedin-controller
+           .decoration (m/InputDecoration
+                          .labelText "LinkedIn (Optional)"
+                          .hintText "Enter your LinkedIn profile URL"
+                          .border (m/OutlineInputBorder)))
+         (m/SizedBox .height 15.0)
+
+           ;; Video Introduction (Phase 2)
+         (m/Container
+           .padding (m/EdgeInsets.all 15.0)
+           .decoration (m/BoxDecoration
+                          .color t/light-grey
+                          .borderRadius (m/BorderRadius.circular 8.0))
+           .child
+           (m/Row
+              .children
+              [(m/Icon (m/Icons.videocam)
+                 .color t/grey)
+               (m/SizedBox .width 10.0)
+               (m/Expanded
+                  .child
+                  (m/Column
+                    .crossAxisAlignment m.CrossAxisAlignment/start
+                    .children
+                    [(m/Text "Video Introduction"
+                             .style
+                             (m/TextStyle
+                               .fontWeight m.FontWeight/bold))
+                     (m/Text "Coming in Phase 2"
+                             .style
+                             (m/TextStyle
+                               .color t/grey
+                               .fontSize 12.0))]))]))
+
+         (m/SizedBox .height 30.0)
+         ;
+         ;  ;; Submit Button
+         (m/Center
+           .child
+           (m/ElevatedButton
+             .style (m/ElevatedButton.styleFrom
+                      .backgroundColor t/blue
+                      .padding (m/EdgeInsets.symmetric .vertical 15.0 .horizontal 40.0))
+             .onPressed (fn []
+                            (when (.validate (.-currentState form-key))
+                              (m/showDialog
+                                .context ctx
+                                .builder
+                                (f/build
+                                  (m/AlertDialog
+                                    .title (m/Text "Profile Submitted")
+                                    .content (m/Text "Your profile has been successfully submitted!"))
+                                  .actions
+                                  [(m/TextButton
+                                     .onPressed (fn [] (.pop m/Navigator ctx) nil)
+                                     .child (m/Text "OK"))])))
+                            nil)
+             .child (m/Text "Submit Profile"
+                             .style (m/TextStyle
+                                      .fontSize 16.0))))])))))))
+
+
+;; This function can be used for standalone testing of the athlete profile form
+(comment
+  (defn main []
+    (m/runApp
+     (m/MaterialApp
+      .title "NXT ERA"
+      .theme (m/ThemeData
+              .primarySwatch t/blue
+              .visualDensity m.VisualDensity/adaptivePlatformDensity)
+      .home (athlete-profile-form nil)))))

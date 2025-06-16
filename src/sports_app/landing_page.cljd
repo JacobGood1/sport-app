@@ -1,16 +1,10 @@
 (ns sports-app.landing-page
   (:require ["package:flutter/material.dart" :as m]
-            [cljd.flutter :as f]))
+            [cljd.flutter :as f]
+            [sports-app.athlete-profile-form :as athlete-form]
+            [sports-app.theme :refer [blue white orange green purple grey light-grey dark-grey]]))
 
-;; Color definitions
-(def blue m.Colors/blue)
-(def white m.Colors/white)
-(def orange m.Colors/orange)
-(def green m.Colors/green)
-(def purple m.Colors/purple)
-(def grey m.Colors/grey)
-(def light-grey (m/Color 0xFFF5F5F5))
-(def dark-grey (m/Color 0xFF2C2F33))
+
 
 (defn how-it-works-section []
   (m/Container
@@ -231,60 +225,64 @@
 
 (defn landing-page
   [ctx]
-  (m/Scaffold
-   .body
-   (m/SingleChildScrollView
-    .child
-    (m/Column
-     .crossAxisAlignment m.CrossAxisAlignment/center
-     .children
-     [(m/Container
-       .height 500.0
-       .width double/infinity
-       .decoration (m/BoxDecoration
-                    .color dark-grey)
-       .padding (m/EdgeInsets.all 20.0)
-       .child
-       (m/Column
-        .mainAxisAlignment m.MainAxisAlignment/center
-        .children
-        [(m/Text "Bridging Student-Athletes and Employers"
-                .textAlign m.TextAlign/center
-                .style (m/TextStyle
-                        .fontSize 32.0
-                        .fontWeight m.FontWeight/bold
-                        .color white))
-         (m/SizedBox .height 20.0)
-         (m/Text "Create a profile or connect with top-tier early-career talent."
-                .textAlign m.TextAlign/center
-                .style (m/TextStyle
-                        .fontSize 18.0
-                        .color white))
-         (m/SizedBox .height 40.0)
-         (m/Row
-          .mainAxisAlignment m.MainAxisAlignment/center
-          .children
-          [(m/ElevatedButton
-            .style (m/ElevatedButton.styleFrom
-                    .backgroundColor blue
-                    .padding (m/EdgeInsets.symmetric .vertical 15.0 .horizontal 30.0))
-            .onPressed (fn [] nil)
-            .child (m/Text "I'm a Student-Athlete"
-                          .style (m/TextStyle
-                                  .fontSize 16.0)))
-           (m/SizedBox .width 20.0)
-           (m/ElevatedButton
-            .style (m/ElevatedButton.styleFrom
-                    .backgroundColor orange
-                    .padding (m/EdgeInsets.symmetric .vertical 15.0 .horizontal 30.0))
-            .onPressed (fn [] nil)
-            .child (m/Text "I'm a Recruiter"
-                          .style (m/TextStyle
-                                  .fontSize 16.0)))])]))
+  (f/widget
+   :context ctx
+   (m/Scaffold
+    .body
+    (m/SingleChildScrollView
+     .child
+     (m/Column
+      .crossAxisAlignment m.CrossAxisAlignment/center
+      .children
+      [(m/Container
+        .height 500.0
+        .width double/infinity
+        .decoration (m/BoxDecoration
+                     .color dark-grey)
+        .padding (m/EdgeInsets.all 20.0)
+        .child
+        (m/Column
+         .mainAxisAlignment m.MainAxisAlignment/center
+         .children
+         [(m/Text "Bridging Student-Athletes and Employers"
+                 .textAlign m.TextAlign/center
+                 .style (m/TextStyle
+                         .fontSize 32.0
+                         .fontWeight m.FontWeight/bold
+                         .color white))
+          (m/SizedBox .height 20.0)
+          (m/Text "Create a profile or connect with top-tier early-career talent."
+                 .textAlign m.TextAlign/center
+                 .style (m/TextStyle
+                         .fontSize 18.0
+                         .color white))
+          (m/SizedBox .height 40.0)
+          (m/Row
+           .mainAxisAlignment m.MainAxisAlignment/center
+           .children
+           [(m/ElevatedButton
+             .style (m/ElevatedButton.styleFrom
+                     .backgroundColor blue
+                     .padding (m/EdgeInsets.symmetric .vertical 15.0 .horizontal 30.0))
+             .onPressed (fn []
+                          (.push m/Navigator ctx (m/MaterialPageRoute .builder (fn [_] (athlete-form/athlete-profile-form ctx))))
+                          nil)
+             .child (m/Text "I'm a Student-Athlete"
+                           .style (m/TextStyle
+                                   .fontSize 16.0)))
+            (m/SizedBox .width 20.0)
+            (m/ElevatedButton
+             .style (m/ElevatedButton.styleFrom
+                     .backgroundColor orange
+                     .padding (m/EdgeInsets.symmetric .vertical 15.0 .horizontal 30.0))
+             .onPressed (fn [] nil)
+             .child (m/Text "I'm a Recruiter"
+                           .style (m/TextStyle
+                                   .fontSize 16.0)))])]))
 
-      (how-it-works-section)
-      (why-nxt-era-section)
-      (social-proof-section)]))))
+       (how-it-works-section)
+       (why-nxt-era-section)
+       (social-proof-section)])))))
 
 ;; Main function moved to main.cljd
 ;; This function can be used for standalone testing of the landing page
