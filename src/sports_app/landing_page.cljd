@@ -2,6 +2,7 @@
   (:require ["package:flutter/material.dart" :as m]
             [cljd.flutter :as f]
             [sports-app.athlete-profile-form :as athlete-form]
+            [sports-app.recruiter-profile-form :as recruiter-form]
             [sports-app.theme :refer [blue white orange green purple grey light-grey dark-grey]]))
 
 
@@ -275,7 +276,9 @@
              .style (m/ElevatedButton.styleFrom
                      .backgroundColor orange
                      .padding (m/EdgeInsets.symmetric .vertical 15.0 .horizontal 30.0))
-             .onPressed (fn [] nil)
+             .onPressed (fn []
+                          (.push m/Navigator ctx (m/MaterialPageRoute .builder (fn [_] (recruiter-form/recruiter-profile-form ctx))))
+                          nil)
              .child (m/Text "I'm a Recruiter"
                            .style (m/TextStyle
                                    .fontSize 16.0)))])]))
