@@ -5,6 +5,68 @@
             [sports-app.recruiter-profile-form :as recruiter-form]
             [sports-app.theme :refer [blue white orange green purple grey light-grey dark-grey]]))
 
+;; Menu item component with hover effect
+(defn menu-item [label]
+  (f/widget
+   :let [is-hovered (atom false)]
+   :watch [hovered is-hovered]
+   (m/MouseRegion
+    .onEnter (fn [_] (reset! is-hovered true) nil)
+    .onExit (fn [_] (reset! is-hovered false) nil)
+    .child
+    (m/Container
+     .padding (m/EdgeInsets.symmetric .vertical 15.0 .horizontal 20.0)
+     .decoration (m/BoxDecoration
+                  .border (if hovered
+                            (m/Border .bottom (m/BorderSide .color blue .width 2.0))
+                            (m/Border .bottom (m/BorderSide .color m.Colors/transparent .width 2.0))))
+     .child
+     (m/Text label
+            .style (m/TextStyle
+                    .color (if hovered blue dark-grey)
+                    .fontSize 16.0
+                    .fontWeight (if hovered m.FontWeight/bold m.FontWeight/normal)))))))
+
+;; Navigation menu for the landing page
+(defn navigation-menu []
+  (m/Container
+   .padding (m/EdgeInsets.symmetric .horizontal 20.0)
+   .height 70.0
+   .decoration (m/BoxDecoration
+                .color white
+                .boxShadow [(m/BoxShadow
+                             .color (m/Colors.grey.withOpacity 0.3)
+                             .spreadRadius 1.0
+                             .blurRadius 5.0
+                             .offset (m/Offset 0 3))])
+   .child
+   (m/Row
+    .mainAxisAlignment m.MainAxisAlignment/start
+    .children
+    [(m/Container
+      .padding (m/EdgeInsets.only .right 20.0)
+      .child
+      (m/Row
+       .children
+       [(m/Container
+         .width 120.0
+         .height 40.0
+         .decoration (m/BoxDecoration
+                      .color blue
+                      .borderRadius (m/BorderRadius.circular 5.0))
+         .child (m/Center
+                 .child (m/Text "NXT ERA"
+                              .style (m/TextStyle
+                                      .color white
+                                      .fontSize 18.0
+                                      .fontWeight m.FontWeight/bold))))]))
+     (m/Row
+      .children
+      [(menu-item "Students")
+       (menu-item "Employers")
+       (menu-item "Career centers")
+       (menu-item "Company")])])))
+
 
 
 (defn how-it-works-section []
@@ -229,6 +291,9 @@
   (f/widget
    :context ctx
    (m/Scaffold
+    .appBar (m/PreferredSize
+             .preferredSize (m/Size.fromHeight 70.0)
+             .child (navigation-menu))
     .body
     (m/SingleChildScrollView
      .child
