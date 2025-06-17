@@ -21,8 +21,8 @@
               .min 0
               .max 100
               .onChanged (fn [a] 
-                           nil)
-              ))
+                           nil)))
+
 
 ;; Slider(
 ;;               value: _currentValue,
