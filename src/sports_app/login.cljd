@@ -1,0 +1,49 @@
+(ns sports-app.login
+  (:require ["package:flutter/material.dart" :as m]
+            [cljd.flutter :as f]
+            ["package:flutter_login/flutter_login.dart" :as login]
+            ["package:go_router/go_router.dart" :as gorouter]
+            ["package:flutter_svg/flutter_svg.dart" :as svg]
+            ["package:flutter_svg_provider/flutter_svg_provider.dart" :as svg-provider]))
+
+(def users {"mental-cancer@hijacksyour.brain" "never-surrender"})
+(def login-time (Duration .milliseconds 2250))
+(declare router)
+
+(defn ^#/(Future String?) -auth-user [^login/LoginData login-data]
+  (-> (Future/delayed login-time)
+      (.then (fn [_]
+               (cond (not (.containsKey users (.-name login-data))) "User does not exist"
+                     (not= (users (.-name login-data)) (.-password login-data)) "Password does not match"
+                     :else nil)))))
+
+(defn ^#/(Future String?) -signup-user [^login/SignupData signup-data]
+  (-> (Future/delayed login-time)
+      (.then (fn [_] nil))))
+
+(defn ^#/(Future String?) -recover-password [^String name]
+  (-> (Future/delayed login-time)
+      (.then (fn [_]
+               (if (not (.containsKey users name))
+                 "User does not exist")))))
+
+(defn login-route [context on-successful-login]
+  (let [logo-widget (svg/SvgPicture.asset "assets/images/NXTERA.svg" .semanticsLabel "NXT ERA Logo")]
+    (f/widget
+      (m/Scaffold)
+      .body
+      m/Center
+      (m/Column
+        .mainAxisAlignment m.MainAxisAlignment/center
+        .children
+        [(m/Expanded
+           .child (login/FlutterLogin
+                    ;.logo (svg-provider/Svg "assets/images/NXTERA.svg" .size (m/Size 250.0 250.0))
+                    .logo (m/AssetImage "assets/images/NXTERA logo.png")
+                    ;.children [logo-widget]
+                    .onLogin -auth-user
+                    .onSignup -signup-user
+                    .onSubmitAnimationCompleted (fn [] (on-successful-login) nil)
+                    .onRecoverPassword -recover-password
+                    .theme (login/LoginTheme .logoWidth 1)))]))))
+
