@@ -2,9 +2,14 @@
   (:require ["package:flutter/material.dart" :as m]
             [cljd.flutter :as f]
             [sports-app.rocket-ship :as rs]
+<<<<<<< HEAD
             [sports-app.login :as login]
             ["package:rive/rive.dart" :as rive]
             ["package:go_router/go_router.dart" :as gorouter]))
+=======
+            [sports-app.rive-utils :as rutils]
+            ["package:rive/rive.dart" :as rive]))
+>>>>>>> origin/main
 
 (declare router)
 
@@ -31,9 +36,91 @@
                           (second-route ctx)))]))
 
 (defn main []
+<<<<<<< HEAD
   (f/run
     (m/MaterialApp.router
       .title "NXT ERA"
       .theme (m/ThemeData.dark)
       .routerConfig router)))
     
+=======
+  (let [rocket-asset (rs/load-asset "assets/animations/rocket_ship.riv" "State Machine 1")
+        progress-bar-asset (rs/load-asset "assets/animations/progress_bar.riv" "State Machine 1")]
+    (f/run
+      (m/MaterialApp
+        .title "Welcome to Flutter"
+        .theme (m/ThemeData.dark))
+      .home
+      (m/Scaffold)
+        ;.backgroundColor (m/Color 0xFF2C2F33))
+        ;; .appBar (m/AppBar
+        ;;         .title (m/Text "Welcome to ClojureDart"))
+      .body
+      m/Center
+      (m/Column
+        .mainAxisAlignment m.MainAxisAlignment/center
+        .children
+        [(m/Container
+           .width 300
+           .height 300
+           .child
+           (:widget rocket-asset))
+         (m/Container
+           .width 300
+           .height 300
+           .child
+           (:widget progress-bar-asset))
+         
+         (m/Text "kanban can when?!"
+                .style (m/TextStyle
+                         .color m.Colors/red
+                         .fontSize 32.0))
+         (m/SizedBox .height 20.0)
+         (f/widget
+          :let [slider (atom 0)]
+          :watch [value slider]
+          (m/Slider
+              .value value
+              .min 0
+              .max 100
+              .onChanged (fn [a]
+                           (reset! slider a)
+                           (.-value! (.getNumberInput @(:controller progress-bar-asset) "load percent") a) 
+                           nil)))
+         (f/widget
+           :let [button-state (atom (m/Icon (m/Icons.flight_takeoff)))]
+           :watch [icon-symbol button-state]
+           
+           (m/ElevatedButton.icon
+            .onPressed (fn []
+                         
+                         
+                         (.fire (rs/trigger (:controller rocket-asset) "Trigger 1"))
+                         (comment (if (.-isActive animation-idle)
+                           (reset! button-state (m/Icon (m/Icons.flight_takeoff)))
+                           (reset! button-state (m/Icon (m/Icons.flight_land))))))
+             
+             .icon icon-symbol
+             .label (m/Text "dsadsa")))]))))
+
+(comment (m/Slider
+              .value 0
+              .min 0
+              .max 100
+              .onChanged (fn [a] 
+                           nil)
+              ))
+
+;; Slider(
+;;               value: _currentValue,
+;;               min: 0,
+;;               max: 100,
+;;               divisions: 100, // Optional: for discrete steps
+;;               label: _currentValue.round().toString(), // Optional: shows value on thumb
+;;               onChanged: (double value) {
+;;                 setState(() {
+;;                   _currentValue = value; // Update the value when sliding
+;;                 });
+;;               },
+;;             )
+>>>>>>> origin/main

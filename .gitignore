@@ -70,6 +70,12 @@ test/cljd-out/
 
 .nrepl-port
 
+# ClojureDart
+.cpcache/
+.clojuredart/
+lib/cljd-out/
+test/cljd-out/
+
 # Emacs
 \#*\#
 *.\#

@@ -1,0 +1,30 @@
+(ns sports-app.rive-utils
+  (:require ["package:rive/rive.dart" :as rive]
+            ["package:flutter/material.dart" :as m]
+            ["dart-widgets/rive-widget-data.dart" :as wd]))
+
+
+(deftype InnerRiveWidget []
+  :extends m/State
+  (build [this build-context]
+    (m/Center
+      .child
+      (if (not (.-artboard this))
+        (m/CircularProgressIndicator)
+        (rive/RiveAnimation.network "assets/animations/rocket_ship.riv"
+                                    ;.controllers [anim]
+                                    .onInit (fn [-artboard]
+                                              (.-artboard! this -artboard)
+                                              nil)
+
+                                    .fit (m/BoxFit.contain))))))
+
+
+(deftype RiveWidget []
+  :extends m/StatefulWidget
+  (createState [this] (InnerRiveWidget)))
+  ;^:mixin wd/RiveWidgetData)
+
+(defn artboard [rive-widget]
+  (.-artboard rive-widget))
+
