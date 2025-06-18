@@ -2,114 +2,27 @@
   (:require ["package:flutter/material.dart" :as m]
             [cljd.flutter :as f]
             [sports-app.rocket-ship :as rs]
-<<<<<<< HEAD
-            [sports-app.login :as login]
-            ["package:rive/rive.dart" :as rive]
-            ["package:go_router/go_router.dart" :as gorouter]))
-=======
             [sports-app.rive-utils :as rutils]
+            [sports-app.landing-page :as landing]
             ["package:rive/rive.dart" :as rive]))
->>>>>>> origin/main
 
-(declare router)
-
-(defn second-route [context]
-  (m/Scaffold
-    .appBar (m/AppBar .title (m/Text "Second Route"))
-    .body
-    (f/widget
-      m/Center
-      (m/ElevatedButton .onPressed #(.pop router))
-      (m/Text "Go back!"))))
-
-(def router
-  (gorouter/GoRouter
-    .routes [(gorouter/GoRoute
-               .path "/"
-               .builder (fn [^m/BuildContext ctx
-                             ^gorouter/GoRouterState state]
-                          (login/login-route ctx (fn []))))
-             (gorouter/GoRoute
-               .path "/another-one"
-               .builder (fn [^m/BuildContext ctx
-                             ^gorouter/GoRouterState state]
-                          (second-route ctx)))]))
 
 (defn main []
-<<<<<<< HEAD
   (f/run
-    (m/MaterialApp.router
+    (m/MaterialApp
       .title "NXT ERA"
-      .theme (m/ThemeData.dark)
-      .routerConfig router)))
-    
-=======
-  (let [rocket-asset (rs/load-asset "assets/animations/rocket_ship.riv" "State Machine 1")
-        progress-bar-asset (rs/load-asset "assets/animations/progress_bar.riv" "State Machine 1")]
-    (f/run
-      (m/MaterialApp
-        .title "Welcome to Flutter"
-        .theme (m/ThemeData.dark))
-      .home
-      (m/Scaffold)
-        ;.backgroundColor (m/Color 0xFF2C2F33))
-        ;; .appBar (m/AppBar
-        ;;         .title (m/Text "Welcome to ClojureDart"))
-      .body
-      m/Center
-      (m/Column
-        .mainAxisAlignment m.MainAxisAlignment/center
-        .children
-        [(m/Container
-           .width 300
-           .height 300
-           .child
-           (:widget rocket-asset))
-         (m/Container
-           .width 300
-           .height 300
-           .child
-           (:widget progress-bar-asset))
-         
-         (m/Text "kanban can when?!"
-                .style (m/TextStyle
-                         .color m.Colors/red
-                         .fontSize 32.0))
-         (m/SizedBox .height 20.0)
-         (f/widget
-          :let [slider (atom 0)]
-          :watch [value slider]
-          (m/Slider
-              .value value
-              .min 0
-              .max 100
-              .onChanged (fn [a]
-                           (reset! slider a)
-                           (.-value! (.getNumberInput @(:controller progress-bar-asset) "load percent") a) 
-                           nil)))
-         (f/widget
-           :let [button-state (atom (m/Icon (m/Icons.flight_takeoff)))]
-           :watch [icon-symbol button-state]
-           
-           (m/ElevatedButton.icon
-            .onPressed (fn []
-                         
-                         
-                         (.fire (rs/trigger (:controller rocket-asset) "Trigger 1"))
-                         (comment (if (.-isActive animation-idle)
-                           (reset! button-state (m/Icon (m/Icons.flight_takeoff)))
-                           (reset! button-state (m/Icon (m/Icons.flight_land))))))
-             
-             .icon icon-symbol
-             .label (m/Text "dsadsa")))]))))
+      .theme (m/ThemeData
+               .primarySwatch m.Colors/blue
+               .visualDensity m.VisualDensity/adaptivePlatformDensity)
+      .home (landing/landing-page nil))))
 
 (comment (m/Slider
-              .value 0
-              .min 0
-              .max 100
-              .onChanged (fn [a] 
-                           nil)
-              ))
+           .value 0
+           .min 0
+           .max 100
+           .onChanged (fn [a]
+                        nil)))
+
 
 ;; Slider(
 ;;               value: _currentValue,
@@ -123,4 +36,43 @@
 ;;                 });
 ;;               },
 ;;             )
->>>>>>> origin/main
+
+;(ns sports-app.main
+;  (:require ["package:flutter/material.dart" :as m]
+;            [cljd.flutter :as f]
+;            [sports-app.rocket-ship :as rs]
+;            [sports-app.login :as login]
+;            ["package:rive/rive.dart" :as rive]
+;            ["package:go_router/go_router.dart" :as gorouter]))
+;
+;(declare router)
+;
+;(defn second-route [context]
+;  (m/Scaffold
+;    .appBar (m/AppBar .title (m/Text "Second Route"))
+;    .body
+;    (f/widget
+;      m/Center
+;      (m/ElevatedButton .onPressed #(.pop router))
+;      (m/Text "Go back!"))))
+;
+;(def router
+;  (gorouter/GoRouter
+;    .routes [(gorouter/GoRoute
+;               .path "/"
+;               .builder (fn [^m/BuildContext ctx
+;                             ^gorouter/GoRouterState state]
+;                          (login/login-route ctx (fn []))))
+;             (gorouter/GoRoute
+;               .path "/another-one"
+;               .builder (fn [^m/BuildContext ctx
+;                             ^gorouter/GoRouterState state]
+;                          (second-route ctx)))]))
+;
+;(defn main []
+;  (f/run
+;    (m/MaterialApp.router
+;      .title "NXT ERA"
+;      .theme (m/ThemeData.dark)
+;      .routerConfig router)))
+;    
