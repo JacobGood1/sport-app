@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rive/rive.dart';
+import "package:rive_native/rive_native.dart";
 
 mixin RiveWidgetData {
   Artboard? _artboard;

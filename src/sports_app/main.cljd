@@ -4,7 +4,8 @@
             [sports-app.rocket-ship :as rs]
             [sports-app.rive-utils :as rutils]
             [sports-app.landing-page :as landing]
-            ["package:rive/rive.dart" :as rive]))
+            ["package:rive_native/rive_native.dart" :as rive]
+            [sports-app.theme :refer [black]]))
 
 
 (defn main []
@@ -12,16 +13,18 @@
     (m/MaterialApp
       .title "NXT ERA"
       .theme (m/ThemeData
-               .primarySwatch m.Colors/blue
-               .visualDensity m.VisualDensity/adaptivePlatformDensity)
+              .primarySwatch m.Colors/red
+              .primaryColor black
+              ;.appBarTheme (m/AppBarTheme .color black)
+              .visualDensity m.VisualDensity/adaptivePlatformDensity)
       .home (landing/landing-page nil))))
 
 (comment (m/Slider
-           .value 0
-           .min 0
-           .max 100
-           .onChanged (fn [a]
-                        nil)))
+              .value 0
+              .min 0
+              .max 100
+              .onChanged (fn [a] 
+                           nil)))
 
 
 ;; Slider(

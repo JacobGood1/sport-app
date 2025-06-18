@@ -1,0 +1,214 @@
+(ns sports-app.recruiter-profile-form
+  (:require ["package:flutter/material.dart" :as m]
+            [cljd.flutter :as f]
+            [cljd.string :as str]
+            [sports-app.theme :as t]))
+
+(defn recruiter-profile-form
+  [ctx]
+  (f/widget
+   :context ctx
+   :let [form-key (#/(m/GlobalKey m/FormState))
+         sports ["Basketball" "Football" "Soccer" "Baseball" "Tennis" "Swimming" "Track & Field" "Volleyball" "Golf" "Other"]
+         majors ["Business" "Technology" "Computer Science" "Engineering" "Healthcare" "Education" "Marketing" "Finance" "Sports Management" "Liberal Arts" "Other"]
+         locations ["Northeast" "Southeast" "Midwest" "Southwest" "West Coast" "Remote" "International" "Other"]
+         selected-sports (atom #{})
+         selected-majors (atom #{})
+         selected-locations (atom #{})
+         min-gpa (atom 2.0)
+         max-gpa (atom 4.0)]
+   :managed [name-controller (m/TextEditingController)
+             company-controller (m/TextEditingController)
+             roles-controller (m/TextEditingController)]
+   :watch [s-sports selected-sports
+           s-majors selected-majors
+           s-locations selected-locations
+           s-min-gpa min-gpa
+           s-max-gpa max-gpa]
+   (m/Scaffold
+    .appBar (m/AppBar
+             .title (m/Text "Recruiter Intake Form")
+             .backgroundColor t/blue)
+    .body
+    (m/SingleChildScrollView
+     .child
+     (m/Padding
+      .padding (m/EdgeInsets.all 20.0)
+      .child
+      (m/Form
+       .key form-key
+       .child
+       (m/Column
+        .crossAxisAlignment m.CrossAxisAlignment/start
+        .children
+        [(m/Text "Create Your Recruiter Profile"
+                .style (m/TextStyle
+                        .fontSize 24.0
+                        .fontWeight m.FontWeight/bold
+                        .color t/dark-grey))
+         (m/SizedBox .height 20.0)
+
+         ;; Full Name
+         (m/TextFormField
+           .controller name-controller
+           .decoration (m/InputDecoration
+                          .labelText "Full Name"
+                          .hintText "Enter your full name"
+                          .border (m/OutlineInputBorder))
+           .validator (fn [value] (when (str/blank? value) "Please enter your name")))
+         (m/SizedBox .height 15.0)
+
+         ;; Company
+         (m/TextFormField
+           .controller company-controller
+           .decoration (m/InputDecoration
+                          .labelText "Company"
+                          .hintText "Enter your company name"
+                          .border (m/OutlineInputBorder))
+           .validator (fn [value] (when (str/blank? value) "Please enter your company")))
+         (m/SizedBox .height 15.0)
+
+         ;; Roles Hiring For
+         (m/TextFormField
+           .controller roles-controller
+           .decoration (m/InputDecoration
+                          .labelText "Roles Hiring For"
+                          .hintText "Enter the roles you're hiring for (e.g., Marketing Intern, Software Engineer)"
+                          .border (m/OutlineInputBorder))
+           .validator (fn [value] (when (str/blank? value) "Please enter the roles you're hiring for")))
+         (m/SizedBox .height 25.0)
+
+         ;; Preferred Candidate Attributes Section
+         (m/Text "Preferred Candidate Attributes"
+                .style (m/TextStyle
+                        .fontSize 20.0
+                        .fontWeight m.FontWeight/bold
+                        .color t/dark-grey))
+         (m/SizedBox .height 15.0)
+
+         ;; Sports
+         (m/Text "Sports"
+                .style (m/TextStyle
+                         .fontSize 16.0
+                         .fontWeight m.FontWeight/bold))
+         (m/SizedBox .height 5.0)
+         (m/Wrap
+           .spacing 8.0
+           .children
+           (for [sport sports]
+             (m/FilterChip
+                .label (m/Text sport)
+                .selected (contains? s-sports sport)
+                .backgroundColor t/white
+                .selectedColor t/blue
+                .checkmarkColor t/green
+                .onSelected (fn [selected?]
+                              (swap! selected-sports
+                                     (if selected? conj disj)
+                                     sport)))))
+         (m/SizedBox .height 15.0)
+
+         ;; Majors
+         (m/Text "Majors"
+                .style (m/TextStyle
+                         .fontSize 16.0
+                         .fontWeight m.FontWeight/bold))
+         (m/SizedBox .height 5.0)
+         (m/Wrap
+           .spacing 8.0
+           .children
+           (for [major majors]
+             (m/FilterChip
+                .label (m/Text major)
+                .selected (contains? s-majors major)
+                .backgroundColor t/white
+                .selectedColor t/blue
+                .checkmarkColor t/green
+                .onSelected (fn [selected?]
+                              (swap! selected-majors
+                                     (if selected? conj disj)
+                                     major)))))
+         (m/SizedBox .height 15.0)
+
+         ;; GPA Range
+         (m/Text "GPA Range"
+                .style (m/TextStyle
+                         .fontSize 16.0
+                         .fontWeight m.FontWeight/bold))
+         (m/SizedBox .height 5.0)
+         (m/Row
+          .children
+          [(m/Expanded
+            .child
+            (m/Text (str "Minimum: " s-min-gpa)))
+           (m/Expanded
+            .child
+            (m/Text (str "Maximum: " s-max-gpa)))])
+         (m/RangeSlider
+          .values (m/RangeValues. s-min-gpa s-max-gpa)
+          .min 2.0
+          .max 4.0
+          .divisions 20
+          .labels (m/RangeLabels. (str s-min-gpa) (str s-max-gpa))
+          .onChanged (fn [range]
+                       (reset! min-gpa (.-start range))
+                       (reset! max-gpa (.-end range))))
+         (m/SizedBox .height 15.0)
+
+         ;; Geographic Locations
+         (m/Text "Geographic Locations"
+                .style (m/TextStyle
+                         .fontSize 16.0
+                         .fontWeight m.FontWeight/bold))
+         (m/SizedBox .height 5.0)
+         (m/Wrap
+           .spacing 8.0
+           .children
+           (for [location locations]
+             (m/FilterChip
+                .label (m/Text location)
+                .selected (contains? s-locations location)
+                .backgroundColor t/white
+                .selectedColor t/blue
+                .checkmarkColor t/green
+                .onSelected (fn [selected?]
+                              (swap! selected-locations
+                                     (if selected? conj disj)
+                                     location)))))
+         (m/SizedBox .height 30.0)
+
+         ;; Submit Button
+         (m/Center
+           .child
+           (m/ElevatedButton
+             .style (m/ElevatedButton.styleFrom
+                      .backgroundColor t/blue
+                      .padding (m/EdgeInsets.symmetric .vertical 15.0 .horizontal 40.0))
+             .onPressed (fn []
+                            (when (.validate (.-currentState form-key))
+                              (m/showDialog
+                                .context ctx
+                                .builder
+                                (f/build
+                                  (m/AlertDialog
+                                    .title (m/Text "Profile Submitted")
+                                    .content (m/Text "Your recruiter profile has been successfully submitted! We'll connect you with matching student-athletes."))
+                                  .actions
+                                  [(m/TextButton
+                                     .onPressed (fn [] (.pop m/Navigator ctx) nil)
+                                     .child (m/Text "OK"))])))
+                            nil)
+             .child (m/Text "Submit Profile"
+                             .style (m/TextStyle
+                                      .fontSize 16.0))))])))))))
+
+;; This function can be used for standalone testing of the recruiter profile form
+(comment
+  (defn main []
+    (m/runApp
+     (m/MaterialApp
+      .title "NXT ERA"
+      .theme (m/ThemeData
+              .primarySwatch t/blue
+              .visualDensity m.VisualDensity/adaptivePlatformDensity)
+      .home (recruiter-profile-form nil)))))

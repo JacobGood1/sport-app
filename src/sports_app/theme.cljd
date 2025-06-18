@@ -1,0 +1,13 @@
+(ns sports-app.theme
+  (:require ["package:flutter/material.dart" :as m]))
+;; Color definitions
+(def blue m.Colors/blue)
+(def white m.Colors/white)
+(def orange m.Colors/orange)
+(def green m.Colors/green)
+(def black m.Colors/black)
+(def purple m.Colors/purple)
+(def red m.Colors/red)
+(def grey m.Colors/grey)
+(def light-grey (m/Color 0xFFF5F5F5))
+(def dark-grey (m/Color 0xFF2C2F33))
