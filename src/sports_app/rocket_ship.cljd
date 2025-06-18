@@ -1,9 +1,8 @@
 (ns sports-app.rocket-ship
   (:require ["package:flutter/material.dart" :as m]
-            ["package:rive/rive.dart" :as rive]
-            [cljd.flutter :as f]))
-
-            ;["dart-widgets/rocket-ship.dart" :as rs]))
+            ["package:rive_native/rive_native.dart" :as rive]
+            [cljd.flutter :as f]
+            ["dart-widgets/rive-native-widget.dart" :as w]))
 
 ;; example of state machine implementation in dart
 ;; https://rive.app/docs/runtimes/state-machines#flutter
@@ -37,33 +36,34 @@
 ;;      state-machine-atom
 ;;      artboard-atom]))
 
-(defn trigger
-  [controller ^String trigger]
-  (first (filter (fn [smi] (= (.-name smi) trigger)) (.-inputs @controller))))
+(comment (defn trigger
+           [controller ^String trigger]
+           (first (filter (fn [smi] (= (.-name smi) trigger)) (.-inputs @controller))))
 
-(defn input
-  [controller ^String input]
-  (first (filter (fn [smi] (= (.-name smi) input)) (.-inputs @controller))))
+         (defn input
+           [controller ^String input]
+           (first (filter (fn [smi] (= (.-name smi) input)) (.-inputs @controller)))))
 
-(defn make-controller
-  [artboard ^String state-machine]
+(defn make-rive-widget
+  [artboard ^String artboard-name ^String state-machine-name]
   "Create StateMachineController with Artboard object."
-  (let [controller (rive/StateMachineController.fromArtboard
-                      artboard
-                      state-machine)]
+  (let [controller (w/make_rive_widget
+                     .assetName "rocket-ship"
+                     .artboardName artboard-name
+                     .stateMachineName state-machine-name)]
     (when controller
       (.addController artboard controller))
     controller))
 
-(defn load-asset
-  [filepath ^String main-state-machine]
-  (let [state-machine-controller-atom (atom nil)]
-    {:widget (rive/RiveAnimation.network
-                filepath
-                .onInit (fn [artboard]
-                            (reset! state-machine-controller-atom (make-controller artboard main-state-machine))
-                            nil))
-    :controller state-machine-controller-atom}))
+;(defn load-asset
+;  [filepath ^String main-state-machine]
+;  (let [state-machine-controller-atom (atom nil)]
+;    {:widget (rive/RiveAnimation.network
+;                filepath
+;                .onInit (fn [artboard]
+;                            (reset! state-machine-controller-atom (make-controller artboard main-state-machine))
+;                            nil))
+;    :controller state-machine-controller-atom}))
 
 ;; state machine controller might be the only type of controller
 ;; state machine controller only has .fromArtboard, no other .from
