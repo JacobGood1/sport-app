@@ -39,3 +39,43 @@
 ;;                 });
 ;;               },
 ;;             )
+
+;(ns sports-app.main
+;  (:require ["package:flutter/material.dart" :as m]
+;            [cljd.flutter :as f]
+;            [sports-app.rocket-ship :as rs]
+;            [sports-app.login :as login]
+;            ["package:rive/rive.dart" :as rive]
+;            ["package:go_router/go_router.dart" :as gorouter]))
+;
+;(declare router)
+;
+;(defn second-route [context]
+;  (m/Scaffold
+;    .appBar (m/AppBar .title (m/Text "Second Route"))
+;    .body
+;    (f/widget
+;      m/Center
+;      (m/ElevatedButton .onPressed #(.pop router))
+;      (m/Text "Go back!"))))
+;
+;(def router
+;  (gorouter/GoRouter
+;    .routes [(gorouter/GoRoute
+;               .path "/"
+;               .builder (fn [^m/BuildContext ctx
+;                             ^gorouter/GoRouterState state]
+;                          (login/login-route ctx (fn []))))
+;             (gorouter/GoRoute
+;               .path "/another-one"
+;               .builder (fn [^m/BuildContext ctx
+;                             ^gorouter/GoRouterState state]
+;                          (second-route ctx)))]))
+;
+;(defn main []
+;  (f/run
+;    (m/MaterialApp.router
+;      .title "NXT ERA"
+;      .theme (m/ThemeData.dark)
+;      .routerConfig router)))
+;    
