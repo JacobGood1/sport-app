@@ -8,6 +8,9 @@
 (def black m.Colors/black)
 (def purple m.Colors/purple)
 (def red m.Colors/red)
+
 (def grey m.Colors/grey)
 (def light-grey (m/Color 0xFFF5F5F5))
 (def dark-grey (m/Color 0xFF2C2F33))
+
+(def background (m/Color 0xe9eaec))
