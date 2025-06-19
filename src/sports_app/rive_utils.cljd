@@ -1,30 +1,56 @@
 (ns sports-app.rive-utils
   (:require ["package:rive_native/rive_native.dart" :as rive]
             ["package:flutter/material.dart" :as m]
-            ["dart-widgets/rive-widget-data.dart" :as wd]))
+            ["dart-widgets/rive-widget-data.dart" :as wd]
+            ["dart-widgets/rive-native-widget.dart" :as w]))
 
+(defn init-rive
+  []
+  (w/initialize))
 
-;(deftype InnerRiveWidget []
-;  :extends m/State
-;  (build [this build-context]
-;    (m/Center
-;      .child
-;      (if (not (.-artboard this))
-;        (m/CircularProgressIndicator)
-;        (rive/RiveAnimation.network "assets/animations/rocket_ship.riv"
-;                                    ;.controllers [anim]
-;                                    .onInit (fn [-artboard]
-;                                              (.-artboard! this -artboard)
-;                                              nil)
-;
-;                                    .fit (m/BoxFit.contain))))))
-;
-;
-;(deftype RiveWidget []
-;  :extends m/StatefulWidget
-;  (createState [this] (InnerRiveWidget)))
-;  ;^:mixin wd/RiveWidgetData)
-;
-;(defn artboard [rive-widget]
-;  (.-artboard rive-widget))
+(defn make-rive-widget
+      "Creates a rive native widget"
+      [^double width
+       ^double height
+       ^String asset-name
+       ^String artboard-name
+       ^String state-machine-name
+       &
+       {:keys [hit-test-behavior
+               ^m/MouseCursor cursor
+               fit
+               ^m/Alignment alignment
+               ^double layout-scale-factor
+               ^Function with-artboard
+               ^Function with-state-machine
+               ^Function with-view-model-instance
+               ^bool auto-bind]
+        :or {artboard-name ""
+             state-machine-name ""
+             hit-test-behavior rive/RiveHitTestBehavior.opaque
+             cursor m/MouseCursor.defer
+             fit rive/Fit.contain
+             alignment m/Alignment.center
+             layout-scale-factor 1.0
+             with-artboard (fn [artboard] nil)
+             with-state-machine (fn [state-machine] nil)
+             with-view-model-instance (fn [model-view-instance] nil)
+             auto-bind true}}]
+ (m/Container
+   .width width
+   .height height
+   .child
+   (w/make_rive_widget
+     .assetName asset-name
+     .artboardName artboard-name
+     .stateMachineName state-machine-name
+     .hitTestBehavior hit-test-behavior
+     .cursor cursor
+     .fit fit
+     .alignment alignment
+     .layoutScaleFactor layout-scale-factor
+     .withArtboard with-artboard
+     .withStateMachine with-state-machine
+     .withViewModelInstance with-view-model-instance
+     .autoBind auto-bind)))
 

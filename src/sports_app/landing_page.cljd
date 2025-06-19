@@ -3,11 +3,13 @@
             [cljd.flutter :as f]
             [sports-app.athlete-profile-form :as athlete-form]
             [sports-app.recruiter-profile-form :as recruiter-form]
+            [sports-app.rive-utils :as utils]
             [sports-app.theme :refer [blue red black white orange green purple grey light-grey dark-grey]]))
 
 ;; Menu item component with hover effect
 (defn menu-item [label]
-  (let [item-width (+ 40.0 (* (count label) 7.0))] ; Calculate fixed width based on text length
+  (let [item-width (+ 40.0 (* (count label) 7.0))]
+    ; Calculate fixed width based on text length
     (f/widget
      :let [is-hovered (atom false)]
      :watch [hovered is-hovered]
@@ -136,6 +138,7 @@
                                         .fontSize 24.0
                                         .fontWeight m.FontWeight/bold))))
          (m/SizedBox .height 10.0)
+
          (m/Text "Connect"
                 .style (m/TextStyle
                         .fontWeight m.FontWeight/bold))
@@ -260,6 +263,12 @@
                      .borderRadius (m/BorderRadius.circular 5.0))
         .child (m/Center
                 .child (m/Text "LOGO")))
+       (utils/make-rive-widget 1000
+                               1000
+                               "rocket-ship"
+                               "Artboard"
+                               "State Machine 1"
+                               :with-state-machine (fn [sm] (println "gell") (println sm)))
 
        (m/Container
         .width 80.0
