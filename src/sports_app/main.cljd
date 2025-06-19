@@ -1,6 +1,7 @@
 (ns sports-app.main
   (:require ["package:flutter/material.dart" :as m]
             [cljd.flutter :as f]
+            [sports-app.rive-utils :as utils]
             [sports-app.rocket-ship :as rs]
             [sports-app.rive-utils :as rutils]
             [sports-app.landing-page :as landing]
@@ -9,6 +10,7 @@
 
 
 (defn main []
+  (await (utils/init-rive))
   (f/run
     (m/MaterialApp
       .title "NXT ERA"

@@ -3,28 +3,43 @@
             [cljd.flutter :as f]
             [sports-app.athlete-profile-form :as athlete-form]
             [sports-app.recruiter-profile-form :as recruiter-form]
+            [sports-app.rive-utils :as utils]
             [sports-app.theme :refer [blue red black white orange green purple grey light-grey dark-grey]]))
 
 ;; Menu item component with hover effect
 (defn menu-item [label]
-  (f/widget
-   :let [is-hovered (atom false)]
-   :watch [hovered is-hovered]
-   (m/MouseRegion
-    .onEnter (fn [_] (reset! is-hovered true) nil)
-    .onExit (fn [_] (reset! is-hovered false) nil)
-    .child
-    (m/Container
-     .padding (m/EdgeInsets.symmetric .vertical 15.0 .horizontal 20.0)
-     .decoration (m/BoxDecoration
-                  .color (if hovered dark-grey m.Colors/transparent)
-                  .borderRadius (m/BorderRadius.circular 5.0))
-     .child
-     (m/Text label
-            .style (m/TextStyle
-                    .color white
-                    .fontSize 16.0
-                    .fontWeight (if hovered m.FontWeight/bold m.FontWeight/normal)))))))
+  (let [item-width (+ 40.0 (* (count label) 7.0))]
+    ; Calculate fixed width based on text length
+    (f/widget
+     :let [is-hovered (atom false)]
+     :watch [hovered is-hovered]
+     (m/MouseRegion
+      .onEnter (fn [_] (reset! is-hovered true) nil)
+      .onExit (fn [_] (reset! is-hovered false) nil)
+      .child
+      (m/Container
+       .padding (m/EdgeInsets.symmetric .vertical 15 .horizontal 0)
+       .width item-width ; Fixed width that doesn't change with hover state
+       .child
+       (m/Stack
+        .alignment m.Alignment/center
+        .children
+        [(m/AnimatedContainer
+          .duration (Duration .milliseconds 300)
+          .curve m.Curves/easeOutCubic
+          .width item-width ; Fixed width that doesn't change
+          .height (if hovered 40.0 0.0) ; Only height animates
+          .decoration (m/BoxDecoration
+                       .color dark-grey
+                       .borderRadius (m/BorderRadius.circular 5.0)))
+         (m/Padding
+          .padding (m/EdgeInsets.symmetric .horizontal 0)
+          .child
+          (m/Text label
+                 .style (m/TextStyle
+                         .color white
+                         .fontSize 20.0
+                         .fontWeight (if hovered m.FontWeight/bold m.FontWeight/normal))))]))))))
 
 ;; Navigation menu for the landing page
 (defn navigation-menu []
@@ -43,7 +58,7 @@
     .mainAxisAlignment m.MainAxisAlignment/start
     .children
     [(m/Container
-      .padding (m/EdgeInsets.only .right 20.0)
+      .padding (m/EdgeInsets.only .right 10.0)
       .child
       (m/Row
        .children
@@ -123,6 +138,7 @@
                                         .fontSize 24.0
                                         .fontWeight m.FontWeight/bold))))
          (m/SizedBox .height 10.0)
+
          (m/Text "Connect"
                 .style (m/TextStyle
                         .fontWeight m.FontWeight/bold))
@@ -247,6 +263,12 @@
                      .borderRadius (m/BorderRadius.circular 5.0))
         .child (m/Center
                 .child (m/Text "LOGO")))
+       (utils/make-rive-widget 1000
+                               1000
+                               "rocket-ship"
+                               "Artboard"
+                               "State Machine 1"
+                               :with-state-machine (fn [sm] (println "gell") (println sm)))
 
        (m/Container
         .width 80.0
@@ -283,10 +305,7 @@
                       .textAlign m.TextAlign/center
                       .style (m/TextStyle
                               .fontWeight m.FontWeight/bold))]))])))
-(comment (m/PreferredSize
-           .preferredSize (m/Size.fromHeight 70.0)
-           .wang "dsad"
-           .child (navigation-menu)))
+
 (defn landing-page
   [ctx]
   (f/widget
