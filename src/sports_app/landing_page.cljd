@@ -267,8 +267,8 @@
                                1000
                                "rocket-ship"
                                "Artboard"
-                               "State Machine 1"
-                               :with-state-machine (fn [sm] (println "gell") (println sm)))
+                               "State Machine 1")
+                               ;:with-state-machine (fn [sm] (println "gell") (println sm)))
 
        (m/Container
         .width 80.0
