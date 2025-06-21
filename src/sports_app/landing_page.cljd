@@ -255,38 +255,61 @@
      (m/Row
       .mainAxisAlignment m.MainAxisAlignment/spaceEvenly
       .children
-      [(m/Container
-        .width 80.0
-        .height 40.0
-        .decoration (m/BoxDecoration
-                     .color grey
-                     .borderRadius (m/BorderRadius.circular 5.0))
-        .child (m/Center
-                .child (m/Text "LOGO")))
-       (utils/make-rive-widget 1000
-                               1000
-                               "rocket-ship"
-                               "Artboard"
-                               "State Machine 1")
+      [
+       (f/widget
+         :let [m-hovered (atom false)
+               m-clicked (atom false)
+               sm (atom nil)
+               timer (utils/create-resumable (fn [])
+                                             10000)]
+         :watch [hovered? m-hovered
+                 clicked? m-clicked]
+         (m/GestureDetector
+           .onTapDown (fn [_] (utils/trigger @sm "on-down"))
+           .onTapUp (fn [_] (utils/trigger @sm "on-up"))
+           .child
+           (m/MouseRegion
+             .onEnter (fn [_] (.replaceAll timer
+                                           (fn [] (utils/trigger @sm "on-enter"))
+                                           16
+                                           0) nil)
+
+
+             ;.onHover (fn [_]
+             ;           (.fire (.trigger @sm "on-enter")))
+             .onExit (fn [_] (.replaceAll timer
+                                          (fn [] (utils/trigger @sm "on-exit"))
+                                           16
+                                           500))
+
+             .child
+             (utils/make-rive-widget 100
+                                     30
+                                     "button"
+                                     "artboard"
+                                     "statemachine"
+                                     :with-state-machine (fn [-sm] (reset! sm -sm) nil)))))
+
+
+
+       (utils/make-rive-widget 100
+                               30
+                               "button"
+                               "artboard"
+                               "statemachine")
                                ;:with-state-machine (fn [sm] (println "gell") (println sm)))
 
-       (m/Container
-        .width 80.0
-        .height 40.0
-        .decoration (m/BoxDecoration
-                     .color grey
-                     .borderRadius (m/BorderRadius.circular 5.0))
-        .child (m/Center
-                .child (m/Text "LOGO")))
+       (utils/make-rive-widget 100
+                               30
+                               "button"
+                               "artboard"
+                               "statemachine")
 
-       (m/Container
-        .width 80.0
-        .height 40.0
-        .decoration (m/BoxDecoration
-                     .color grey
-                     .borderRadius (m/BorderRadius.circular 5.0))
-        .child (m/Center
-                .child (m/Text "LOGO")))])
+       (utils/make-rive-widget 100
+                               30
+                               "button"
+                               "artboard"
+                               "statemachine")])
 
      (m/SizedBox .height 20.0)
      (m/Container

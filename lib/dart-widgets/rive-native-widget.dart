@@ -3,9 +3,16 @@ import 'package:rive_native/rive_native.dart' as rive;
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
-void _withArtboard(rive.Artboard artboard){}
-void _withStateMachine(rive.StateMachine stateMachine){}
-void _withViewModelInstance(rive.ViewModelInstance viewModelInstance){}
+void _withArtboard(rive.Artboard artboard){
+  // artboard.
+}
+void _withStateMachine(rive.StateMachine stateMachine){
+  // rive.Fit.
+  // stateMachine.
+}
+void _withViewModelInstance(rive.ViewModelInstance viewModelInstance){
+  // viewModelInstance.trigger(path).trigger()
+}
 
 RivePlayer make_rive_widget({
   required String assetName,
