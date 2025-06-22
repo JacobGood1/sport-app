@@ -2,7 +2,7 @@
   (:require ["package:flutter/material.dart" :as m]
             ["package:rive_native/rive_native.dart" :as rive]
             [cljd.flutter :as f]
-            ["dart-widgets/rive-native-widget.dart" :as w]))
+            ["rive-utils/rive-widget.dart" :as w]))
 
 ;; example of state machine implementation in dart
 ;; https://rive.app/docs/runtimes/state-machines#flutter
@@ -44,16 +44,16 @@
            [controller ^String input]
            (first (filter (fn [smi] (= (.-name smi) input)) (.-inputs @controller)))))
 
-(defn make-rive-widget
-  [artboard ^String artboard-name ^String state-machine-name]
-  "Create StateMachineController with Artboard object."
-  (let [controller (w/make_rive_widget
-                     .assetName "rocket-ship"
-                     .artboardName artboard-name
-                     .stateMachineName state-machine-name)]
-    (when controller
-      (.addController artboard controller))
-    controller))
+;(defn make-rive-widget
+;  [artboard ^String artboard-name ^String state-machine-name]
+;  "Create StateMachineController with Artboard object."
+;  (let [controller (w/make_rive_widget
+;                     .assetName "rocket-ship"
+;                     .artboardName artboard-name
+;                     .stateMachineName state-machine-name)]
+;    (when controller
+;      (.addController artboard controller))
+;    controller))
 
 ;(defn load-asset
 ;  [filepath ^String main-state-machine]

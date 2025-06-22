@@ -259,36 +259,33 @@
        (f/widget
          :let [m-hovered (atom false)
                m-clicked (atom false)
-               sm (atom nil)
                timer (utils/create-resumable (fn [])
-                                             10000)]
+                                             10000)
+               rive-widge (utils/make-rive-widget 100
+                                                  30
+                                                  "button"
+                                                  "artboard"
+                                                  "statemachine")]
          :watch [hovered? m-hovered
                  clicked? m-clicked]
          (m/GestureDetector
-           .onTapDown (fn [_] (utils/trigger @sm "on-down"))
-           .onTapUp (fn [_] (utils/trigger @sm "on-up"))
+           .onTapDown (fn [_] (utils/fire rive-widge "on-down"))
+           .onTapUp (fn [_] (utils/fire rive-widge "on-up"))
            .child
            (m/MouseRegion
-             .onEnter (fn [_] (.replaceAll timer
-                                           (fn [] (utils/trigger @sm "on-enter"))
-                                           16
-                                           0) nil)
-
-
-             ;.onHover (fn [_]
-             ;           (.fire (.trigger @sm "on-enter")))
+             .onEnter (fn [_]
+                        (.replaceAll timer
+                                     (fn [] (utils/fire rive-widge "on-enter"))
+                                     16
+                                     0)
+                        nil)
              .onExit (fn [_] (.replaceAll timer
-                                          (fn [] (utils/trigger @sm "on-exit"))
+                                          (fn [] (utils/fire rive-widge "on-exit"))
                                            16
                                            500))
 
              .child
-             (utils/make-rive-widget 100
-                                     30
-                                     "button"
-                                     "artboard"
-                                     "statemachine"
-                                     :with-state-machine (fn [-sm] (reset! sm -sm) nil)))))
+             rive-widge)))
 
 
 
