@@ -34,7 +34,7 @@
              state-machine-name ""
              hit-test-behavior rive/RiveHitTestBehavior.opaque
              cursor m/MouseCursor.defer
-             fit rive/Fit.layout
+             fit rive/Fit.contain
              alignment m/Alignment.center
              layout-scale-factor 1.0
              auto-bind true}}]

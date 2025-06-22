@@ -242,7 +242,9 @@
 
 (defn social-proof-section []
   (m/Container
-   .padding (m/EdgeInsets.symmetric .vertical 20.0 .horizontal 16.0)
+   .padding (m/EdgeInsets.symmetric
+              .vertical 20.0
+              .horizontal 16.0)
    .child
    (m/Column
     .crossAxisAlignment m.CrossAxisAlignment/center
@@ -255,19 +257,14 @@
      (m/Row
       .mainAxisAlignment m.MainAxisAlignment/spaceEvenly
       .children
-      [
-       (f/widget
-         :let [m-hovered (atom false)
-               m-clicked (atom false)
-               timer (utils/create-resumable (fn [])
+      [(f/widget
+         :let [timer (utils/create-resumable (fn [])
                                              10000)
                rive-widge (utils/make-rive-widget 100
                                                   30
                                                   "button"
                                                   "artboard"
-                                                  "statemachine")]
-         :watch [hovered? m-hovered
-                 clicked? m-clicked]
+                                                  "state-machine")]
          (m/GestureDetector
            .onTapDown (fn [_] (utils/fire rive-widge "on-down"))
            .onTapUp (fn [_] (utils/fire rive-widge "on-up"))
@@ -279,34 +276,32 @@
                                      16
                                      0)
                         nil)
-             .onExit (fn [_] (.replaceAll timer
+             .onExit (fn [_]
+                       (.replaceAll timer
                                           (fn [] (utils/fire rive-widge "on-exit"))
                                            16
                                            500))
 
              .child
              rive-widge)))
-
-
-
-       (utils/make-rive-widget 100
-                               30
-                               "button"
-                               "artboard"
-                               "statemachine")
                                ;:with-state-machine (fn [sm] (println "gell") (println sm)))
 
        (utils/make-rive-widget 100
                                30
                                "button"
                                "artboard"
+                               "state-machine")
+       (utils/make-rive-widget 200
+                               200
+                               "rocket-ship"
+                               "Artboard"
                                "statemachine")
 
        (utils/make-rive-widget 100
                                30
                                "button"
                                "artboard"
-                               "statemachine")])
+                               "state-machine")])
 
      (m/SizedBox .height 20.0)
      (m/Container
@@ -343,13 +338,24 @@
         .height 500.0
         .width double/infinity
         .decoration (m/BoxDecoration
+                     .color black)
+        .child (utils/make-rive-widget 500
+                                      500
+                                      "nxtera-introduction"
+                                      "nxtera-introduction"
+                                      "State Machine 1"))
+       (m/Container
+        .height 500.0
+        .width double/infinity
+        .decoration (m/BoxDecoration
                      .color dark-grey)
         .padding (m/EdgeInsets.all 20.0)
         .child
         (m/Column
          .mainAxisAlignment m.MainAxisAlignment/center
          .children
-         [(m/Text "Bridging Student-Athletes and Employers"
+         [
+          (m/Text "Bridging Student-Athletes and Employers"
                  .textAlign m.TextAlign/center
                  .style (m/TextStyle
                          .fontSize 32.0
@@ -386,7 +392,6 @@
              .child (m/Text "I'm a Recruiter"
                            .style (m/TextStyle
                                    .fontSize 16.0)))])]))
-
        (how-it-works-section)
        (why-nxt-era-section)
        (social-proof-section)])))))

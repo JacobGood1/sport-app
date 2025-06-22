@@ -8,6 +8,7 @@ void _withArtboard(rive.Artboard artboard){
 }
 void _withStateMachine(rive.StateMachine stateMachine){
   // rive.Fit.
+  // rive.fit.contain keeps the size of the widget of the row
   // stateMachine.
 }
 void _withViewModelInstance(rive.ViewModelInstance viewModelInstance){
@@ -107,7 +108,6 @@ class _RiveWidgetState extends State<RiveWidget> {
   @override
   Widget build(BuildContext context) {
     return
-
       Container(
         width: widget.width,
         height: widget.height,
@@ -124,8 +124,7 @@ class _RiveWidgetState extends State<RiveWidget> {
           withArtboard: _handleArtboard,
           withStateMachine: _handleStateMachine,
           withViewModelInstance: _handleViewModelInstance,
-          autoBind: widget.autoBind,
-              ),
+          autoBind: widget.autoBind,),
       );
   }
 }
