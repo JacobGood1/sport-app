@@ -2,7 +2,7 @@ import 'package:cljd_sport_app/dart-widgets/app.dart';
 import 'package:flutter/material.dart';
 import 'package:rive_native/rive_native.dart' as rive;
 import 'dart:async';
-import 'rive_player.dart';
+import '../rive-utils/rive_player.dart';
 
 class RocketShip extends StatefulWidget {
   final bool initiallyPlaying;

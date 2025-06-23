@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rive_native/rive_native.dart' as rive;
-import 'app.dart';
+import '../dart-widgets/app.dart';
 
 /// This is an example high-level implementation widget using the Rive Native Painters.
 class RivePlayer extends StatefulWidget {

@@ -1,0 +1,38 @@
+;(ns
+;  (:require ["package:rive_native/rive_native.dart" :as rive]
+;            ["package:flutter/material.dart" :as m]
+;            ["rive-utils/rive-widget.dart" :as w]
+;            ["rive-utils/pulse.dart" :as p]
+;            [sports-app.rive-utils :refer :all]
+;            [cljd.flutter :as f]))
+;
+;
+;(defn rive-button
+;  []
+; (f/widget
+;  :let [timer (create-resumable (fn [])
+;                                10000)
+;        rive-widge (make-rive-widget 100
+;                                     30
+;                                     "button"
+;                                     "artboard"
+;                                     "statemachine")]
+;  (m/GestureDetector
+;    .onTapDown (fn [_] (fire rive-widge "on-down"))
+;    .onTapUp (fn [_] (fire rive-widge "on-up"))
+;    .child
+;    (m/MouseRegion
+;      .onEnter (fn [_]
+;                 (.replaceAll timer
+;                              (fn [] (fire rive-widge "on-enter"))
+;                              16
+;                              0)
+;                 nil)
+;      .onExit (fn [_]
+;                (.replaceAll timer
+;                      (fn [] (fire rive-widge "on-exit")
+;         16
+;         500)))
+;
+;      .child
+;      rive-widge))))
