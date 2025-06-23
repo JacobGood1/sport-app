@@ -16,6 +16,10 @@
 (defn fire
   [^w/RiveWidget sm ^String s]
   (.fire sm s))
+
+(defn set-number
+  [^w/RiveWidget sm ^String name ^double num]
+  (.setNumber sm name num))
 (defn make-rive-widget
       "Creates a rive native widget"
       [^double width
@@ -29,7 +33,8 @@
                fit
                ^m/Alignment alignment
                ^double layout-scale-factor
-               ^bool auto-bind]
+               ^bool auto-bind
+               with-state-machine]
         :or {artboard-name ""
              state-machine-name ""
              hit-test-behavior rive/RiveHitTestBehavior.opaque
@@ -37,7 +42,8 @@
              fit rive/Fit.contain
              alignment m/Alignment.center
              layout-scale-factor 1.0
-             auto-bind true}}]
+             auto-bind true
+             with-state-machine (fn [state])}}]
   (w/RiveWidget
     .width width
     .height height
@@ -49,5 +55,6 @@
     .fit fit
     .alignment alignment
     .layoutScaleFactor layout-scale-factor
-    .autoBind auto-bind))
+    .autoBind auto-bind
+    .withStateMachine with-state-machine))
 

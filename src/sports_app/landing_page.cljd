@@ -301,24 +301,24 @@
 
                 .child
                 rive-widge)))])
-          ;:with-state-machine (fn [sm] (println "gell") (println sm)))
+       ;:with-state-machine (fn [sm] (println "gell") (println sm)))
 
-          ;(utils/make-rive-widget 100
-          ;                        30
-          ;                        "button"
-          ;                        "artboard"
-          ;                        "state-machine")
-          ;(utils/make-rive-widget 200
-          ;                        200
-          ;                        "rocket-ship"
-          ;                        "Artboard"
-          ;                        "statemachine")
-          ;
-          ;(utils/make-rive-widget 100
-          ;                        30
-          ;                        "button"
-          ;                        "artboard"
-          ;                        "state-machine")])
+       ;(utils/make-rive-widget 100
+       ;                        30
+       ;                        "button"
+       ;                        "artboard"
+       ;                        "state-machine")
+       ;(utils/make-rive-widget 200
+       ;                        200
+       ;                        "rocket-ship"
+       ;                        "Artboard"
+       ;                        "statemachine")
+       ;
+       ;(utils/make-rive-widget 100
+       ;                        30
+       ;                        "button"
+       ;                        "artboard"
+       ;                        "state-machine")])
 
        (m/SizedBox .height 20.0)
        (m/Container
@@ -346,11 +346,11 @@
     :context ctx
     (m/Container
       .decoration (m/BoxDecoration
-                   .gradient (m/LinearGradient
-                              .begin m.Alignment/topCenter
-                              .end m.Alignment/bottomCenter
-                              ;.stops [0 0.2 0.4 1]
-                              .colors [black (m/Color.fromARGB 255 40 0 0)]))
+                    .gradient (m/LinearGradient
+                                 .begin m.Alignment/topCenter
+                                 .end m.Alignment/bottomCenter
+                                 ;.stops [0 0.2 0.4 1]
+                                 .colors [black (m/Color.fromARGB 255 40 0 0)]))
       .child
       (m/Scaffold
         .appBar (m/AppBar .backgroundColor (m/Colors.transparent)
@@ -362,72 +362,91 @@
           (m/Column
             .crossAxisAlignment m.CrossAxisAlignment/center
             .children
-            [(m/Container
-               .height 500.0
-               .width double/infinity
-               .child (utils/make-rive-widget 500
-                                              500
-                                              "nxtera-introduction"
-                                              "nxtera-introduction"
-                                              "State Machine 1"))
-             (m/Container
-               .height 500.0
-               .width double/infinity
-               .child (utils/make-rive-widget 500
-                                              500
-                                              "nxt-load-content"
-                                              "nxtera-logo-animation"
-                                              "nxtera-statemachine"))
-             (m/Text "Bridging Student-Athletes and Employers"
-                     .textAlign m.TextAlign/center
-                     .style (m/TextStyle
-                              .fontSize 32.0
-                              .fontWeight m.FontWeight/bold
-                              .color white))
-             (m/SizedBox .height 20.0)
-             (m/Text "Create a profile or connect with top-tier early-career talent."
-                     .textAlign m.TextAlign/center
-                     .style (m/TextStyle
-                              .fontSize 18.0
-                              .color white))
-             (m/SizedBox .height 40.0)
-             (m/Row
-               .mainAxisAlignment m.MainAxisAlignment/center
-               .children
-               [(m/ElevatedButton
-                  .style (m/ElevatedButton.styleFrom
-                           .backgroundColor blue
-                           .padding (m/EdgeInsets.symmetric .vertical 15.0 .horizontal 30.0))
-                  .onPressed (fn []
-                               (.push m/Navigator ctx (m/MaterialPageRoute .builder (fn [_] (athlete-form/athlete-profile-form ctx))))
-                               nil)
-                  .child (m/Text "I'm a Student-Athlete"
-                                 .style (m/TextStyle
-                                          .fontSize 16.0
-                                          .color white)))
-                (m/SizedBox .width 20.0)
-                (m/ElevatedButton
-                  .style (m/ElevatedButton.styleFrom
-                           .backgroundColor orange
-                           .padding (m/EdgeInsets.symmetric .vertical 15.0 .horizontal 30.0))
-                  .onPressed (fn []
-                               (.push m/Navigator ctx (m/MaterialPageRoute .builder (fn [_] (recruiter-form/recruiter-profile-form ctx))))
-                               nil)
-                  .child (m/Text "I'm a Recruiter"
-                                 .style (m/TextStyle
-                                          .fontSize 16.0
-                                          .color white)))])
+            (let [value (atom 0)
+                  widgy (utils/make-rive-widget 500
+                                                500
+                                                "scroll-test-1"
+                                                "artboard"
+                                                "state-machine"
+                                                :with-state-machine (fn [machine]
+                                                                      (println (.-value (.number machine "timeline-position")))
+                                                                      (println machine)))]
+              [widgy
+               (f/widget
+                 :watch [current-value value]
+                 (m/Slider
+                   .value current-value
+                   .onChanged (fn [new-value]
+                                (println new-value)
+                                (utils/set-number widgy "timeline-position" (* 100 new-value))
+                                (reset! value new-value)
+                                nil)))
+               (m/Container
+                 .height 500.0
+                 .width double/infinity
+                 .child (utils/make-rive-widget 500
+                                                500
+                                                "nxtera-introduction"
+                                                "nxtera-introduction"
+                                                "State Machine 1"))
+               (m/Container
+                 .height 500.0
+                 .width double/infinity
+                 .child (utils/make-rive-widget 500
+                                                500
+                                                "nxt-load-content"
+                                                "nxtera-logo-animation"
+                                                "nxtera-statemachine"))
+               (m/Text "Bridging Student-Athletes and Employers"
+                       .textAlign m.TextAlign/center
+                       .style (m/TextStyle
+                                .fontSize 32.0
+                                .fontWeight m.FontWeight/bold
+                                .color white))
+               (m/SizedBox .height 20.0)
+               (m/Text "Create a profile or connect with top-tier early-career talent."
+                       .textAlign m.TextAlign/center
+                       .style (m/TextStyle
+                                .fontSize 18.0
+                                .color white))
+               (m/SizedBox .height 40.0)
+               (m/Row
+                 .mainAxisAlignment m.MainAxisAlignment/center
+                 .children
+                 [(m/ElevatedButton
+                    .style (m/ElevatedButton.styleFrom
+                             .backgroundColor blue
+                             .padding (m/EdgeInsets.symmetric .vertical 15.0 .horizontal 30.0))
+                    .onPressed (fn []
+                                 (.push m/Navigator ctx (m/MaterialPageRoute .builder (fn [_] (athlete-form/athlete-profile-form ctx))))
+                                 nil)
+                    .child (m/Text "I'm a Student-Athlete"
+                                   .style (m/TextStyle
+                                            .fontSize 16.0
+                                            .color white)))
+                  (m/SizedBox .width 20.0)
+                  (m/ElevatedButton
+                    .style (m/ElevatedButton.styleFrom
+                             .backgroundColor orange
+                             .padding (m/EdgeInsets.symmetric .vertical 15.0 .horizontal 30.0))
+                    .onPressed (fn []
+                                 (.push m/Navigator ctx (m/MaterialPageRoute .builder (fn [_] (recruiter-form/recruiter-profile-form ctx))))
+                                 nil)
+                    .child (m/Text "I'm a Recruiter"
+                                   .style (m/TextStyle
+                                            .fontSize 16.0
+                                            .color white)))])
 
-             ;(m/Container
-             ; .height 500.0
-             ; .width double/infinity
-             ; .decoration (m/BoxDecoration
-             ;              .color black)
-             ; .padding (m/EdgeInsets.all 20.0)
-             ; .child)
-             (how-it-works-section)
-             (why-nxt-era-section)
-             (social-proof-section)]))))))
+               ;(m/Container
+               ; .height 500.0
+               ; .width double/infinity
+               ; .decoration (m/BoxDecoration
+               ;              .color black)
+               ; .padding (m/EdgeInsets.all 20.0)
+               ; .child)
+               (how-it-works-section)
+               (why-nxt-era-section)
+               (social-proof-section)])))))))
 
 
 ;; Main function moved to main.cljd
