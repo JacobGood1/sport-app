@@ -359,6 +359,16 @@
                                             "nxtera-introduction"
                                             "nxtera-introduction"
                                             "State Machine 1"))
+           (m/Container
+             .height 500.0
+             .width double/infinity
+             ;.decoration (m/BoxDecoration
+             ;             .color black)
+             .child (utils/make-rive-widget 50
+                                            50
+                                            "nxt-load-content"
+                                            "nxtera-logo-animation"
+                                            "nxtera-statemachine"))
            (m/Text "Bridging Student-Athletes and Employers"
                    .textAlign m.TextAlign/center
                    .style (m/TextStyle
