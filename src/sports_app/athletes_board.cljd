@@ -1,0 +1,180 @@
+(ns sports-app.athletes-board
+  (:require ["package:flutter/material.dart" :as m]
+            [cljd.flutter :as f]
+            [sports-app.theme :refer [blue red black white orange green purple grey light-grey dark-grey]]))
+
+;; Sample job data
+(def sample-jobs
+  [{:title "Marketing Intern"
+    :company "SportsTech Inc."
+    :location "New York, NY"
+    :description "Looking for student-athletes with marketing experience to join our team."
+    :requirements ["Marketing", "Social Media", "Communication"]
+    :posted-date "2 days ago"}
+   {:title "Business Development Associate"
+    :company "Athletic Ventures"
+    :location "San Francisco, CA"
+    :description "Seeking former athletes with strong leadership skills for our business development team."
+    :requirements ["Leadership", "Sales", "Business"]
+    :posted-date "1 week ago"}
+   {:title "Sports Analytics Specialist"
+    :company "GameDay Analytics"
+    :location "Chicago, IL"
+    :description "Join our team analyzing sports data and creating insights for professional teams."
+    :requirements ["Data Analysis", "Statistics", "Sports Knowledge"]
+    :posted-date "3 days ago"}
+   {:title "Content Creator"
+    :company "SportsMedia Network"
+    :location "Los Angeles, CA"
+    :description "Create engaging content for our sports media platforms."
+    :requirements ["Content Creation", "Video Editing", "Social Media"]
+    :posted-date "Just now"}
+   {:title "Fitness Coach"
+    :company "Elite Training"
+    :location "Miami, FL"
+    :description "Help athletes reach their potential through personalized training programs."
+    :requirements ["Fitness", "Coaching", "Nutrition"]
+    :posted-date "5 days ago"}])
+
+;; Job card component
+(defn job-card [job]
+  (m/Card
+    .elevation 2.0
+    .margin (m/EdgeInsets.symmetric .vertical 8.0 .horizontal 16.0)
+    .child
+    (m/Padding
+      .padding (m/EdgeInsets.all 16.0)
+      .child
+      (m/Column
+        .crossAxisAlignment m.CrossAxisAlignment/start
+        .children
+        [(m/Row
+           .mainAxisAlignment m.MainAxisAlignment/spaceBetween
+           .children
+           [(m/Text (:title job)
+                   .style (m/TextStyle
+                            .fontSize 18.0
+                            .fontWeight m.FontWeight/bold
+                            .color dark-grey))
+            (m/Chip
+              .backgroundColor light-grey
+              .label (m/Text (:posted-date job)
+                            .style (m/TextStyle
+                                     .fontSize 12.0
+                                     .color grey)))])
+         (m/SizedBox .height 4.0)
+         (m/Text (:company job)
+                .style (m/TextStyle
+                         .fontSize 16.0
+                         .fontWeight m.FontWeight/w500
+                         .color blue))
+         (m/SizedBox .height 2.0)
+         (m/Text (:location job)
+                .style (m/TextStyle
+                         .fontSize 14.0
+                         .color grey))
+         (m/SizedBox .height 8.0)
+         (m/Text (:description job)
+                .style (m/TextStyle
+                         .fontSize 14.0))
+         (m/SizedBox .height 12.0)
+         (m/Wrap
+           .spacing 6.0
+           .children
+           (for [req (:requirements job)]
+             (m/Chip
+               .backgroundColor light-grey
+               .label (m/Text req
+                             .style (m/TextStyle
+                                      .fontSize 12.0)))))
+         (m/SizedBox .height 12.0)
+         (m/Row
+           .mainAxisAlignment m.MainAxisAlignment/end
+           .children
+           [(m/OutlinedButton
+              .style (m/OutlinedButton.styleFrom
+                       .foregroundColor blue)
+              .onPressed (fn [] nil)
+              .child (m/Text "Save"))
+            (m/SizedBox .width 8.0)
+            (m/ElevatedButton
+              .style (m/ElevatedButton.styleFrom
+                       .backgroundColor blue)
+              .onPressed (fn [] nil)
+              .child (m/Text "Apply"
+                            .style (m/TextStyle
+                                     .color white)))])]))))
+
+;; Filter section
+(defn filter-section []
+  (m/Container
+    .padding (m/EdgeInsets.all 16.0)
+    .decoration (m/BoxDecoration
+                  .color light-grey
+                  .borderRadius (m/BorderRadius.circular 8.0))
+    .margin (m/EdgeInsets.symmetric .horizontal 16.0 .vertical 8.0)
+    .child
+    (m/Column
+      .crossAxisAlignment m.CrossAxisAlignment/start
+      .children
+      [(m/Text "Filter Opportunities"
+              .style (m/TextStyle
+                       .fontSize 16.0
+                       .fontWeight m.FontWeight/bold))
+       (m/SizedBox .height 12.0)
+       (m/Wrap
+         .spacing 8.0
+         .children
+         [(m/Chip
+            .label (m/Text "Marketing")
+            .backgroundColor white)
+          (m/Chip
+            .label (m/Text "Business")
+            .backgroundColor white)
+          (m/Chip
+            .label (m/Text "Sports")
+            .backgroundColor white)
+          (m/Chip
+            .label (m/Text "Technology")
+            .backgroundColor white)
+          (m/Chip
+            .label (m/Text "Media")
+            .backgroundColor white)])])))
+
+;; Main athletes board page
+(defn athletes-board
+  [ctx]
+  (f/widget
+    :context ctx
+    (m/Scaffold
+      .appBar (m/AppBar
+                .title (m/Text "Athlete Opportunities")
+                .backgroundColor blue
+                .actions
+                [(m/IconButton
+                   .icon (m/Icon (m/Icons.search))
+                   .onPressed (fn [] nil))
+                 (m/IconButton
+                   .icon (m/Icon (m/Icons.filter_list))
+                   .onPressed (fn [] nil))])
+      .body
+      (m/Column
+        .children
+        [(filter-section)
+         (m/Expanded
+           .child
+           (m/ListView.builder
+             .itemCount (count sample-jobs)
+             .itemBuilder (fn [context index]
+                            (job-card (nth sample-jobs index)))))]))))
+
+;; This function can be used for standalone testing of the athletes board
+(comment
+  (defn main []
+    (m/runApp
+     (m/MaterialApp
+      .title "NXT ERA"
+      .theme (m/ThemeData
+              .primarySwatch blue
+              .visualDensity m.VisualDensity/adaptivePlatformDensity)
+      .home (athletes-board nil)))))

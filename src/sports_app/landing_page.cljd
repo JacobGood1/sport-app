@@ -3,6 +3,7 @@
             [cljd.flutter :as f]
             [sports-app.athlete-profile-form :as athlete-form]
             [sports-app.recruiter-profile-form :as recruiter-form]
+            [sports-app.athletes-board :as athletes-board]
             [sports-app.rive-utils :as utils]
             [sports-app.theme :refer [blue red black white orange green purple grey light-grey dark-grey]]))
 
@@ -42,7 +43,7 @@
                                 .fontWeight (if hovered m.FontWeight/bold m.FontWeight/normal))))]))))))
 
 ;; Navigation menu for the landing page
-(defn navigation-menu []
+(defn navigation-menu [ctx]
   (m/Container
     .padding (m/EdgeInsets.symmetric .horizontal 20.0)
     .height 70.0
@@ -76,7 +77,11 @@
                                                .fontWeight m.FontWeight/bold))))]))
        (m/Row
          .children
-         [(menu-item "Athletes")
+         [(m/GestureDetector
+            .onTap (fn []
+                     (.push m/Navigator ctx (m/MaterialPageRoute .builder (fn [_] (athletes-board/athletes-board ctx))))
+                     nil)
+            .child (menu-item "Athletes"))
           (menu-item "Employers")
           (menu-item "Company")])])))
 
@@ -295,25 +300,25 @@
                                        500))
 
                 .child
-                rive-widge)))
+                rive-widge)))])
           ;:with-state-machine (fn [sm] (println "gell") (println sm)))
 
-          (utils/make-rive-widget 100
-                                  30
-                                  "button"
-                                  "artboard"
-                                  "state-machine")
-          (utils/make-rive-widget 200
-                                  200
-                                  "rocket-ship"
-                                  "Artboard"
-                                  "statemachine")
-
-          (utils/make-rive-widget 100
-                                  30
-                                  "button"
-                                  "artboard"
-                                  "state-machine")])
+          ;(utils/make-rive-widget 100
+          ;                        30
+          ;                        "button"
+          ;                        "artboard"
+          ;                        "state-machine")
+          ;(utils/make-rive-widget 200
+          ;                        200
+          ;                        "rocket-ship"
+          ;                        "Artboard"
+          ;                        "statemachine")
+          ;
+          ;(utils/make-rive-widget 100
+          ;                        30
+          ;                        "button"
+          ;                        "artboard"
+          ;                        "state-machine")])
 
        (m/SizedBox .height 20.0)
        (m/Container
@@ -349,7 +354,7 @@
       .child
       (m/Scaffold
         .appBar (m/AppBar .backgroundColor (m/Colors.transparent)
-                          .title (m/Container .child (navigation-menu)))
+                          .title (m/Container .child (navigation-menu ctx)))
         .backgroundColor (m/Colors.transparent)
         .body
         (m/SingleChildScrollView

@@ -103,6 +103,8 @@ class _RiveWidgetState extends State<RiveWidget> {
 
   void _handleViewModelInstance(rive.ViewModelInstance instance) {
     widget.viewModelInstance = instance;
+    print(instance.properties);
+    print(instance.string('text')!.value = "fdsafdsgfgfdgfdgdg");
   }
 
   @override
